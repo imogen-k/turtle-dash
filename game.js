@@ -111,8 +111,14 @@ window.onload = function() {
 
         // physics settings
         physics: {
-            default: "arcade"
-        }
+          default: 'arcade',
+          // arcade: {
+          //     gravity: {
+          //         y: 300
+          //     },
+          //     debug: false
+          // }
+      },
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
@@ -124,16 +130,21 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
-    this.load.image('sea', './assets/sea-background.jpg');
+    this.load.image('sea', './assets/sea-background-main.jpg');
+    this.load.image('ground', './assets/platform1.png');
 
     // player is a sprite sheet made by 24x48 pixels
-    this.load.spritesheet("player", "./assets/side.png", {
-        frameWidth: 20,
-        frameHeight: 24
+    this.load.spritesheet("player", "./assets/turtle.png", {
+        frameWidth: 72,
+        frameHeight: 55
     });
   }
 
   create(){
+
+    //platform
+    // platforms = this.physics.add.staticGroup();
+    // platforms.create(600, 400, 'ground');
 
     // setting player animation
     this.anims.create({
@@ -156,6 +167,9 @@ class playGame extends Phaser.Scene{
       super("PlayGame");
   }
   create(){
+
+    
+
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
 
@@ -163,5 +177,14 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+
+    // the player is not dying
+    this.dying = false;
+
+    if(!this.player.anims.isPlaying){
+      this.player.anims.play("run");
   }
+  }
+  
+  
 }
