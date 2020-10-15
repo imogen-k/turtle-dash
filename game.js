@@ -53,6 +53,8 @@ let game;
 // global game options
 let gameOptions = {
 
+    initialTime: 60,
+
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
 
@@ -124,6 +126,8 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
+   
+
     this.load.image('sea', './assets/sea-background.jpg');
 
     // player is a sprite sheet made by 24x48 pixels
@@ -131,10 +135,15 @@ class preloadGame extends Phaser.Scene{
         frameWidth: 20,
         frameHeight: 24
     });
+
+    this.load.image("energycontainer", "./assets/energycontainer.png");
+    this.load.image("energybar", "./assets/energybar.png");
+    
   }
 
   create(){
 
+    
     // setting player animation
     this.anims.create({
         key: "run",
@@ -163,5 +172,49 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+
+    this.timeLeft = gameOptions.initialTime;
+
+    
+    let energyContainer = this.add.sprite(150, 45, "energycontainer");
+
+  
+    let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
+
+   
+    this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
+
+  
+    this.energyMask.visible = false;
+
+    energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
+
+    
+    this.gameTimer = this.time.addEvent({
+        delay: 1000,
+        callback: function(){
+
+          // if (obstacle.hit === true) {
+            // this.timeLeft -= 3;
+        // } else if (item.collect === true) {
+          // this.timeLeft += 3;
+        // }
+          // } else {
+            this.timeLeft --;
+          // }
+
+            let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
+
+            this.energyMask.x -= stepWidth;
+            if(this.timeLeft == 0){
+                this.scene.start("PlayGame")
+            }
+        },
+        callbackScope: this,
+        loop: true
+    });
+
+
+
   }
 }
