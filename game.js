@@ -26,7 +26,7 @@ let gameOptions = {
     platformVerticalLimit: [0.4, 0.8],
 
     // player gravity
-    playerGravity: 0,
+    playerGravity: 25,
 
     // shark gravity
     sharkGravity: 0,
@@ -90,7 +90,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('ground', './assets/platform1.png');
 
     // shark is a sprite sheet made 
-    this.load.spritesheet("shark", "./assets/shark.png", {
+    this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
    });
@@ -154,13 +154,6 @@ class preloadGame extends Phaser.Scene{
       repeat: -1
   });
 
-    this.anims.create({
-      key: 'left',
-      frames: this.anims.generateFrameNumbers('shark', { start: 0, end: 3 }),
-      frameRate: 10,
-      repeat: -1
-  });
-
     this.scene.start("PlayGame");
   }
 }
@@ -185,11 +178,14 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+    this.player.setBounce(1.5);
+    this.player.setCollideWorldBounds(true);
 
     // adding the shark;
     this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, game.config.height * 0.8, "shark");
     this.shark.setGravityY(gameOptions.sharkGravity);
     this.shark.setDepth(1);
+    
 
     // the player is not dying
     this.dying = false;
@@ -199,10 +195,9 @@ class playGame extends Phaser.Scene{
       this.shark.anims.play("swim");
    }
 
-  // // if(!this.shark.anims.isPlaying){
-  //   this.shark.anims.play("run");
-  // // }
-
+    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.framesMoveUp = 0;
+    this.player.body.allowGravity = false
    
 
     // group with all active stars.
@@ -249,6 +244,18 @@ class playGame extends Phaser.Scene{
     return rightmostRock;
   }
 
+  moveBird() {
+    // if (gameOver)
+    //     return
+
+    // if (!gameStarted)
+    //     startGame(game.scene.scenes[0])
+
+    this.player.setVelocityY(-380)
+    this.player.angle = -10
+    this.framesMoveUp = 30
+}
+
   update(){
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
@@ -263,15 +270,20 @@ class playGame extends Phaser.Scene{
       }
   }, this);
 
-  // recycling stars
-  this.starGroup.getChildren().forEach(function(star){
-    if(star.x < - star.displayWidth / 2){
-        this.starGroup.killAndHide(star);
-        this.starGroup.remove(star);
+  if (this.framesMoveUp > 0)
+        this.framesMoveUp--
+    else if (Phaser.Input.Keyboard.JustDown(this.upButton))
+        this.moveBird()
+    else {
+        this.player.setVelocityY(120)
+
+        if (this.player.angle < 60)
+            this.player.angle += 1
     }
-}, this);
 
   }
+
+  
   
   
 }
