@@ -29,7 +29,7 @@ let gameOptions = {
     playerGravity: 25,
 
     // shark gravity
-    sharkGravity: 0,
+    sharkGravity: 40,
 
     // player jump force
     jumpForce: 400,
@@ -38,7 +38,7 @@ let gameOptions = {
     playerStartPosition: 200,
 
     // shark starting X position
-    sharkStartPosition: 100,
+    sharkStartPosition: 800,
 
     // consecutive jumps allowed
     jumps: 2,
@@ -87,7 +87,7 @@ class preloadGame extends Phaser.Scene{
   preload(){
 
     this.load.image('sea', './assets/sea-background-main.jpg');
-    this.load.image('ground', './assets/platform1.png');
+    this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -116,9 +116,8 @@ class preloadGame extends Phaser.Scene{
 
   create(){
 
-    //platform
-    // platforms = this.physics.add.staticGroup();
-    // platforms.create(600, 400, 'ground');
+  
+
 
     // setting player animation
     this.anims.create({
@@ -168,6 +167,23 @@ class playGame extends Phaser.Scene{
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
 
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    this.platforms = this.physics.add.staticGroup();
+
+    //  Now let's create some ledges
+    this.platforms.create(800, 150, 'sharkplatform');
+    this.platforms.create(800, 450, 'sharkplatform');
+
+    //  Collide the player and the stars with the platforms
+    //this.physics.add.collider(this.shark, this.platforms);
+    // this.physics.add.collider(this.shark, this.platforms, function(){
+
+    //   // play "run" animation if the player is on a platform
+    //   //if(!this.player.anims.isPlaying){
+    //       this.shark.anims.play("swim");
+    //    //}
+    // }, null, this);
+
     // group with all active rocks.
     this.rocksGroup = this.add.group();
 
@@ -182,9 +198,10 @@ class playGame extends Phaser.Scene{
     this.player.setCollideWorldBounds(true);
 
     // adding the shark;
-    this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, game.config.height * 0.8, "shark");
+    this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, 200, "shark");
     this.shark.setGravityY(gameOptions.sharkGravity);
     this.shark.setDepth(1);
+    this.shark.setVelocityY(-100);
     
 
     // the player is not dying
@@ -244,7 +261,7 @@ class playGame extends Phaser.Scene{
     return rightmostRock;
   }
 
-  moveBird() {
+  moveTurtle() {
     // if (gameOver)
     //     return
 
@@ -252,8 +269,8 @@ class playGame extends Phaser.Scene{
     //     startGame(game.scene.scenes[0])
 
     this.player.setVelocityY(-380)
-    this.player.angle = -10
-    this.framesMoveUp = 30
+    this.player.angle = -20
+    this.framesMoveUp = 25
 }
 
   update(){
@@ -273,13 +290,17 @@ class playGame extends Phaser.Scene{
   if (this.framesMoveUp > 0)
         this.framesMoveUp--
     else if (Phaser.Input.Keyboard.JustDown(this.upButton))
-        this.moveBird()
+        this.moveTurtle()
     else {
-        this.player.setVelocityY(120)
+        this.player.setVelocityY(100)
 
         if (this.player.angle < 60)
             this.player.angle += 1
     }
+
+    this.physics.add.collider(this.shark, this.platforms);
+    this.shark.body.setBounce(1);
+    
 
   }
 
