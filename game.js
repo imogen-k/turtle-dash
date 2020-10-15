@@ -1,95 +1,36 @@
-// var config = {
-//   type: Phaser.AUTO,
-//   width: 800,
-//   height: 600,
-//   physics: {
-//       default: 'arcade',
-//       arcade: {
-//           gravity: {
-//               y: 200
-//           }
-//       }
-//   },
-//   scene: {
-//       preload: preload,
-//       create: create
-//   }
-// };
-
-// var game = new Phaser.Game(config);
-
-// function preload() {
-//   this.load.setBaseURL('http://labs.phaser.io');
-
-//   this.load.image('sky', 'assets/skies/space3.png');
-//   this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-//   this.load.image('red', 'assets/particles/red.png');
-// }
-
-// function create() {
-//   this.add.image(400, 300, 'sky');
-
-//   var particles = this.add.particles('red');
-
-//   var emitter = particles.createEmitter({
-//       speed: 100,
-//       scale: {
-//           start: 1,
-//           end: 0
-//       },
-//       blendMode: 'ADD'
-//   });
-
-//   var logo = this.physics.add.image(400, 100, 'logo');
-
-//   logo.setVelocity(100, 200);
-//   logo.setBounce(1, 1);
-//   logo.setCollideWorldBounds(true);
-
-//   emitter.startFollow(logo);
 
 let game;
+let stars;
+let player;
 
 // global game options
 let gameOptions = {
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
-
     // mountain speed, in pixels per second
     mountainSpeed: 80,
-
     // spawn range, how far should be the rightmost platform from the right edge
     // before next platform spawns, in pixels
     spawnRange: [80, 300],
-
     // platform width range, in pixels
     platformSizeRange: [90, 300],
-
     // a height range between rightmost platform and next platform to be spawned
     platformHeightRange: [-5, 5],
-
     // a scale to be multiplied by platformHeightRange
     platformHeighScale: 20,
-
     // platform max and min height, as screen height ratio
     platformVerticalLimit: [0.4, 0.8],
-
     // player gravity
     playerGravity: 0,
-
     // player jump force
     jumpForce: 400,
-
     // player starting X position
     playerStartPosition: 200,
-
     // consecutive jumps allowed
     jumps: 2,
-
     // % of probability a coin appears on the platform
     coinPercent: 25,
-
     // % of probability a fire appears on the platform
     firePercent: 25
 }
@@ -125,6 +66,7 @@ class preloadGame extends Phaser.Scene{
   preload(){
 
     this.load.image('sea', './assets/sea-background.jpg');
+    this.load.image('star', './assets/star.png')
 
     // player is a sprite sheet made by 24x48 pixels
     this.load.spritesheet("player", "./assets/side.png", {
@@ -160,8 +102,44 @@ class playGame extends Phaser.Scene{
     this.add.image(640, 360, 'sea')
 
     // adding the player;
-    this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
-    this.player.setGravityY(gameOptions.playerGravity);
-    this.player.setDepth(2);
-  }
+    player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.5, "player");
+    player.setGravityY(gameOptions.playerGravity);
+    player.setDepth(2);
+
+    stars = this.physics.add.group({
+      key: 'star',
+      repeat: 1000,
+      setXY: { x: game.config.width * 0.60, y: 0, stepX: game.config.width * 0.1 }
+    });
+
+    stars.children.iterate(function (star) {
+        star.setY(game.config.height * Phaser.Math.FloatBetween(0.05, 0.95));
+        star.setVelocityX(-200)
+        star.setGravity(0)
+    });
+
+    this.physics.add.overlap(player, stars, collectStar, null, this);
+
+    // obstacles = this.physics.add.group({
+    //   key: 'trash',
+    //   repeat: 1000,
+    //   setXY: { x: game.config.width * 1.5, y: 0, stepX: game.config.width * 0.33 }
+    // });
+
+    // obtacles.children.iterate(function (obstacles) {
+    //     star.setY(game.config.height * Phaser.Math.FloatBetween(0.1, 0.9));
+    //     star.setVelocityX(-200)
+    //     star.setGravity(0)
+    // });
+
+
+    }
+
+   
 }
+  
+function collectStar (player, star) {
+  star.disableBody(true, true);
+  // ADD TO TIME
+}
+    
