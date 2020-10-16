@@ -4,7 +4,7 @@ let game;
 
 // global game options
 let gameOptions = {
-  
+
     initialTime: 60,
 
     // platform speed range, in pixels per second
@@ -119,13 +119,13 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
 
-    // shark is a sprite sheet made 
+    // shark is a sprite sheet made
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
    });
 
-    // player is a sprite sheet made 
+    // player is a sprite sheet made
     this.load.spritesheet("player", "./assets/turtle.png", {
         frameWidth: 72,
         frameHeight: 55
@@ -143,11 +143,19 @@ class preloadGame extends Phaser.Scene{
       frameHeight: 50
   });
 
+  // the jellyfish is a sprite sheet made by 50x50 pixels
+  this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
+    frameWidth: 50,
+    frameHeight: 50
+
+  });
+
+
   }
 
   create(){
 
-  
+
     // setting player animation
     this.anims.create({
         key: "run",
@@ -181,6 +189,18 @@ class preloadGame extends Phaser.Scene{
       yoyo: true,
       repeat: -1
   });
+
+  // setting jellyfish animation
+  this.anims.create({
+    key: "jellyfishpulse",
+    frames: this.anims.generateFrameNumbers("jellyfish", {
+        start: 0,
+        end: 5
+    }),
+    frameRate: 8,
+    yoyo: true,
+    repeat: -1
+});
 
     this.scene.start("PlayGame");
   }
@@ -233,9 +253,9 @@ class playGame extends Phaser.Scene{
     bgmusic.play()
 
     let energyContainer = this.add.sprite(1100, 45, "energycontainer");
-  
+
     let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
-   
+
     this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
 
     this.energyMask.visible = false;
@@ -291,14 +311,34 @@ class playGame extends Phaser.Scene{
     this.framesMoveUp = 0;
     this.player.body.allowGravity = false;
 
+    // create star group
     this.stars = this.physics.add.group()
 
+    //generate random stars
     this.starGenerator = this.time.addEvent({
       delay: 1000,
       callback: function(){
         var star = this.stars.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'star');
         star.setVelocityX(-200);
         star.anims.play("starpulse");
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create jellyfish group
+    this.jellyfishes = this.physics.add.group()
+
+    //generate random jellyfish
+    this.jellyfishGenerator = this.time.addEvent({
+      delay: 1000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.5) {
+          var jellyfish = this.jellyfishes.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'jellyfish');
+          jellyfish.setVelocityX(-400);
+          jellyfish.anims.play("jellyfishpulse");
+        }
       },
       callbackScope: this,
       loop: true
@@ -372,10 +412,10 @@ class playGame extends Phaser.Scene{
     this.physics.add.collider(this.shark, this.sharkplatforms);
     this.shark.body.setBounce(1);
 
-   
+
    // check if enemy's step counter has reach limit
-   this.shark.body.velocity.x = this.shark.factor * -50; 
+   this.shark.body.velocity.x = this.shark.factor * -50;
 
   }
-  
+
 }
