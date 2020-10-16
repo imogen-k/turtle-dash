@@ -74,7 +74,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [preloadGame, playGame],
+        scene: [preloadGame, startMenu, playGame],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -120,6 +120,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral1', './assets/coral1.png');
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
+    this.load.image('playButton', './assets/play-button.png');
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -184,7 +185,7 @@ class preloadGame extends Phaser.Scene{
       repeat: -1
   });
 
-    this.scene.start("PlayGame");
+    this.scene.start("StartMenu");
   }
 }
 
