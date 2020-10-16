@@ -420,8 +420,7 @@ class playGame extends Phaser.Scene{
       loop: true
     });
 
-     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-     //this.physics.add.overlap(this.player, this.stars, this.collectStar(), null, this);
+     //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
 
@@ -441,17 +440,82 @@ class playGame extends Phaser.Scene{
 
               let stepWidth = this.energyMask.width * gameOptions.initialTime;
               this.energyMask.x += stepWidth;
-          
-              
-
           }
       });
 
     }, null, this);
 
-     //  Checks to see if the player overlaps with any of the jellyfish, if he does call the collectStar function
-     //this.physics.add.overlap(this.player, this.jellyfish, this.collectJellyfish(), null, this);
+     //  Setting collisions for jellyfish
+     this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
 
+      this.tweens.add({
+          targets: jellyfish,
+          y: jellyfish.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(jellyfish);
+              this.stars.remove(jellyfish);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+
+    //  Setting collisions for trashbags
+    this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+
+      this.tweens.add({
+          targets: trashbag,
+          y: trashbag.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(trashbag);
+              this.stars.remove(trashbag);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+
+     //  Setting collisions for trashbags
+     this.physics.add.overlap(this.player, this.nets, function(player, net){
+
+      this.tweens.add({
+          targets: net,
+          y: net.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(net);
+              this.stars.remove(net);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
   }
 
   collectStar(player, star){
