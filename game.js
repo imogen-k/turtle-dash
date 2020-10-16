@@ -103,21 +103,12 @@ class preloadGame extends Phaser.Scene{
 
     this.load.image('sea', './assets/sea-background.jpg');
 
-    // player is a sprite sheet made by 24x48 pixels
-    this.load.spritesheet("player", "./assets/side.png", {
-        frameWidth: 20,
-        frameHeight: 24
-    });
-
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
     this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
     this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
     this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
-
-    // main sea background
-    this.load.image('sea', './assets/sea-background-main.jpg');
 
     // invisible shark platform
     this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
