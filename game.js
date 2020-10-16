@@ -150,6 +150,19 @@ class preloadGame extends Phaser.Scene{
 
   });
 
+  // the jellyfish is a sprite sheet made by 100x100 pixels
+  this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+    frameWidth: 100,
+    frameHeight: 100
+
+  });
+
+  // the net is a sprite sheet made by 50x50 pixels
+  this.load.spritesheet("net", "./assets/net.png", {
+    frameWidth: 100,
+    frameHeight: 100
+
+  });
 
   }
 
@@ -201,6 +214,31 @@ class preloadGame extends Phaser.Scene{
     yoyo: true,
     repeat: -1
 });
+
+// setting trashbag animation
+this.anims.create({
+  key: "trashbagpulse",
+  frames: this.anims.generateFrameNumbers("trashbag", {
+      start: 0,
+      end: 5
+  }),
+  frameRate: 8,
+  yoyo: true,
+  repeat: -1
+});
+
+// setting net animation
+this.anims.create({
+  key: "netpulse",
+  frames: this.anims.generateFrameNumbers("net", {
+      start: 0,
+      end: 5
+  }),
+  frameRate: 8,
+  yoyo: true,
+  repeat: -1
+});
+
 
     this.scene.start("PlayGame");
   }
@@ -343,6 +381,43 @@ class playGame extends Phaser.Scene{
       callbackScope: this,
       loop: true
     });
+
+    // create trashbag group
+    this.trashbags = this.physics.add.group()
+
+    //generate random trashbag
+    this.trashbagGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var trashbag = this.trashbags.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'trashbag');
+          trashbag.setVelocityX(-100);
+          trashbag.anims.play("trashbagpulse");
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create net group
+    this.nets = this.physics.add.group()
+
+    //generate random net
+    this.netGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var net = this.nets.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'net');
+          net.setVelocityX(-100);
+          net.anims.play("netpulse");
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
 
   }
 
