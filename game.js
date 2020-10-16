@@ -85,9 +85,19 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
-
+    // main sea background
     this.load.image('sea', './assets/sea-background-main.jpg');
+
+    // invisible shark platform
     this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
+
+    // invisible coral platform
+    this.load.image('coralplatform', './assets/invisible-coral-platform1.png');
+
+    // coral
+    this.load.image('coral1', './assets/coral1.png');
+    this.load.image('coral2', './assets/coral2.png');
+    this.load.image('coral3', './assets/coral3.png');
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -115,9 +125,6 @@ class preloadGame extends Phaser.Scene{
   }
 
   create(){
-
-  
-
 
     // setting player animation
     this.anims.create({
@@ -168,21 +175,24 @@ class playGame extends Phaser.Scene{
     this.add.image(640, 360, 'sea')
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
-    this.platforms = this.physics.add.staticGroup();
+    this.sharkplatforms = this.physics.add.staticGroup();
+    this.coralplatforms = this.physics.add.staticGroup();
+    this.coral = this.physics.add.staticGroup();
 
-    //  Now let's create some ledges
-    this.platforms.create(800, 150, 'sharkplatform');
-    this.platforms.create(800, 450, 'sharkplatform');
+    //  Create inivisible shark platforms
+    this.sharkplatforms.create(800, 150, 'sharkplatform');
+    this.sharkplatforms.create(800, 450, 'sharkplatform');
+    this.sharkplatforms.create(400, 250, 'sharkplatform');
 
-    //  Collide the player and the stars with the platforms
-    //this.physics.add.collider(this.shark, this.platforms);
-    // this.physics.add.collider(this.shark, this.platforms, function(){
+    //  Create inivisible coral platforms
+    this.coralplatforms.create(700, 200, 'coralplatform');
+    this.coralplatforms.create(900, 297, 'coralplatform');
+    this.coralplatforms.create(500, 293, 'coralplatform');
 
-    //   // play "run" animation if the player is on a platform
-    //   //if(!this.player.anims.isPlaying){
-    //       this.shark.anims.play("swim");
-    //    //}
-    // }, null, this);
+    //  Create coral
+    this.coral.create(701, 150, 'coral1');
+    this.coral.create(901, 250, 'coral2');
+    this.coral.create(501, 250, 'coral3');
 
     // group with all active rocks.
     this.rocksGroup = this.add.group();
@@ -200,9 +210,12 @@ class playGame extends Phaser.Scene{
     // adding the shark;
     this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, 200, "shark");
     this.shark.setGravityY(gameOptions.sharkGravity);
-    this.shark.setDepth(1);
+    this.shark.setDepth(2);
     this.shark.setVelocityY(-100);
-    
+    //this.shark.setVelocityX(-100);
+
+    //shark movement
+    this.shark.factor = 1;
 
     // the player is not dying
     this.dying = false;
@@ -212,9 +225,10 @@ class playGame extends Phaser.Scene{
       this.shark.anims.play("swim");
    }
 
+   // player movement
     this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.framesMoveUp = 0;
-    this.player.body.allowGravity = false
+    this.player.body.allowGravity = false;
    
 
     // group with all active stars.
@@ -298,9 +312,12 @@ class playGame extends Phaser.Scene{
             this.player.angle += 1
     }
 
-    this.physics.add.collider(this.shark, this.platforms);
+    this.physics.add.collider(this.shark, this.sharkplatforms);
     this.shark.body.setBounce(1);
-    
+
+   
+   // check if enemy's step counter has reach limit
+   this.shark.body.velocity.x = this.shark.factor * -50; 
 
   }
 
