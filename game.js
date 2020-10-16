@@ -74,7 +74,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [preloadGame, startMenu, playGame, endScreen],
+        scene: [preloadGame, startMenu, playGame, endScreen, loadingScene, scoreScene],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -86,7 +86,12 @@ window.onload = function() {
           //     },
           //     debug: false
           // }
-      },
+      }, 
+      
+      
+      dom: {
+        createContainer: true
+    },
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
@@ -98,9 +103,9 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
-    // this.load.on('progress', function() {
-    //   this.scene.start("LoadingScene")
-    // });
+
+    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
+    
 
     this.load.image('sea', './assets/sea-background.jpg');
 
@@ -125,6 +130,9 @@ class preloadGame extends Phaser.Scene{
     //buttons
     this.load.image('playButton', './assets/play-button.png');
     this.load.image('playAgain', './assets/play-again.png');
+    this.load.image('submitScore', './assets/submit-score.png');
+
+    this.scoreList = [];
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -154,7 +162,6 @@ class preloadGame extends Phaser.Scene{
 
   create(){
 
-  
     // setting player animation
     this.anims.create({
         key: "run",
@@ -273,7 +280,7 @@ class playGame extends Phaser.Scene{
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
-            if(this.timeLeft === 60){
+            if(this.timeLeft === 115){
                 bgmusic.stop()
                 this.scene.start("EndScreen")
             }
@@ -402,5 +409,7 @@ class playGame extends Phaser.Scene{
    this.shark.body.velocity.x = this.shark.factor * -50; 
 
   }
+
+
   
 }
