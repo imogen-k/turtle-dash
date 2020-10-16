@@ -1,9 +1,10 @@
+//const { createBuilderStatusReporter } = require("typescript");
+
 let game;
 
 // global game options
 let gameOptions = {
   
-
     initialTime: 60,
 
     // platform speed range, in pixels per second
@@ -67,7 +68,7 @@ window.onload = function() {
         },
         audio: {
             mute: false,
-            volume: 20,
+            volume: 5,
             rate: 1,
             detune: 0,
             seek: 0,
@@ -97,9 +98,6 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
-
-
-   
 
     this.load.image('sea', './assets/sea-background.jpg');
 
@@ -139,8 +137,8 @@ class preloadGame extends Phaser.Scene{
       frameHeight: 512
   });
 
-    // the star is a sprite sheet made by 20x20 pixels
-    this.load.spritesheet("star", "star.png", {
+    // the star is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("star", "./assets/star.png", {
       frameWidth: 50,
       frameHeight: 50
   });
@@ -174,12 +172,12 @@ class preloadGame extends Phaser.Scene{
 
     // setting star animation
     this.anims.create({
-      key: "rotate",
+      key: "starpulse",
       frames: this.anims.generateFrameNumbers("star", {
           start: 0,
           end: 5
       }),
-      frameRate: 15,
+      frameRate: 8,
       yoyo: true,
       repeat: -1
   });
@@ -229,27 +227,21 @@ class playGame extends Phaser.Scene{
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
 
-
     this.timeLeft = gameOptions.initialTime;
 
     var bgmusic = this.sound.add('backgroundmusic');
     bgmusic.play()
 
-    
     let energyContainer = this.add.sprite(1100, 45, "energycontainer");
-
   
     let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
-
    
     this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
 
-  
     this.energyMask.visible = false;
 
     energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
 
-    
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -273,10 +265,6 @@ class playGame extends Phaser.Scene{
         callbackScope: this,
         loop: true
     });
-
-
-
-
     this.player.setBounce(1.5);
     this.player.setCollideWorldBounds(true);
 
@@ -288,7 +276,7 @@ class playGame extends Phaser.Scene{
     //this.shark.setVelocityX(-100);
 
     //shark movement
-    this.shark.factor = 1;
+    //this.shark.factor = 1;
 
     // the player is not dying
     this.dying = false;
@@ -302,27 +290,22 @@ class playGame extends Phaser.Scene{
     this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.framesMoveUp = 0;
     this.player.body.allowGravity = false;
-   
 
-    // group with all active stars.
-    this.starGroup = this.add.group({
+    this.stars = this.physics.add.group()
 
-      // once a star is removed, it's added to the pool
-      removeCallback: function(star){
-          star.scene.coinPool.add(star)
-      }
-  });
-
-    // star pool
-    this.starPool = this.add.group({
-
-      // once a star is removed from the pool, it's added to the active coins group
-      removeCallback: function(star){
-          star.scene.starGroup.add(star)
-      }
-  });
+    this.starGenerator = this.time.addEvent({
+      delay: 1000,
+      callback: function(){
+        var star = this.stars.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'star');
+        star.setVelocityX(-200);
+        star.anims.play("starpulse");
+      },
+      callbackScope: this,
+      loop: true
+    });
 
   }
+
 
   // adding rocks
   addRocks(){
