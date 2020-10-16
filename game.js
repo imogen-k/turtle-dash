@@ -318,7 +318,7 @@ class playGame extends Phaser.Scene{
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
-            if(this.timeLeft == 0){
+            if(this.timeLeft === 60){
                 this.scene.start("PlayGame")
             }
         },
@@ -419,6 +419,43 @@ class playGame extends Phaser.Scene{
       callbackScope: this,
       loop: true
     });
+
+     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+     //this.physics.add.overlap(this.player, this.stars, this.collectStar(), null, this);
+
+     this.physics.add.overlap(this.player, this.stars, function(player, star){
+
+      this.tweens.add({
+          targets: star,
+          y: star.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(star);
+              this.stars.remove(star);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          
+              
+
+          }
+      });
+
+    }, null, this);
+
+     //  Checks to see if the player overlaps with any of the jellyfish, if he does call the collectStar function
+     //this.physics.add.overlap(this.player, this.jellyfish, this.collectJellyfish(), null, this);
+
+  }
+
+  collectStar(player, star){
+    star.destroy();
 
 
   }
