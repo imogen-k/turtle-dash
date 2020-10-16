@@ -1,53 +1,3 @@
-// var config = {
-//   type: Phaser.AUTO,
-//   width: 800,
-//   height: 600,
-//   physics: {
-//       default: 'arcade',
-//       arcade: {
-//           gravity: {
-//               y: 200
-//           }
-//       }
-//   },
-//   scene: {
-//       preload: preload,
-//       create: create
-//   }
-// };
-
-// var game = new Phaser.Game(config);
-
-// function preload() {
-//   this.load.setBaseURL('http://labs.phaser.io');
-
-//   this.load.image('sky', 'assets/skies/space3.png');
-//   this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-//   this.load.image('red', 'assets/particles/red.png');
-// }
-
-// function create() {
-//   this.add.image(400, 300, 'sky');
-
-//   var particles = this.add.particles('red');
-
-//   var emitter = particles.createEmitter({
-//       speed: 100,
-//       scale: {
-//           start: 1,
-//           end: 0
-//       },
-//       blendMode: 'ADD'
-//   });
-
-//   var logo = this.physics.add.image(400, 100, 'logo');
-
-//   logo.setVelocity(100, 200);
-//   logo.setBounce(1, 1);
-//   logo.setCollideWorldBounds(true);
-
-//   emitter.startFollow(logo);
-
 let game;
 
 // global game options
@@ -60,7 +10,7 @@ let gameOptions = {
     platformSpeedRange: [300, 300],
 
     // mountain speed, in pixels per second
-    mountainSpeed: 80,
+    rockSpeed: 80,
 
     // spawn range, how far should be the rightmost platform from the right edge
     // before next platform spawns, in pixels
@@ -79,7 +29,10 @@ let gameOptions = {
     platformVerticalLimit: [0.4, 0.8],
 
     // player gravity
-    playerGravity: 0,
+    playerGravity: 25,
+
+    // shark gravity
+    sharkGravity: 40,
 
     // player jump force
     jumpForce: 400,
@@ -87,11 +40,14 @@ let gameOptions = {
     // player starting X position
     playerStartPosition: 200,
 
+    // shark starting X position
+    sharkStartPosition: 800,
+
     // consecutive jumps allowed
     jumps: 2,
 
     // % of probability a coin appears on the platform
-    coinPercent: 25,
+    starPercent: 25,
 
     // % of probability a fire appears on the platform
     firePercent: 25
@@ -123,8 +79,14 @@ window.onload = function() {
 
         // physics settings
         physics: {
-            default: "arcade"
-        }
+          default: 'arcade',
+          // arcade: {
+          //     gravity: {
+          //         y: 300
+          //     },
+          //     debug: false
+          // }
+      },
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
@@ -135,6 +97,7 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
+
 
    
 
@@ -152,6 +115,45 @@ class preloadGame extends Phaser.Scene{
     this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
     this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
     this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
+
+    // main sea background
+    this.load.image('sea', './assets/sea-background-main.jpg');
+
+    // invisible shark platform
+    this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
+
+    // invisible coral platform
+    this.load.image('coralplatform', './assets/invisible-coral-platform1.png');
+
+    // coral
+    this.load.image('coral1', './assets/coral1.png');
+    this.load.image('coral2', './assets/coral2.png');
+    this.load.image('coral3', './assets/coral3.png');
+
+    // shark is a sprite sheet made 
+    this.load.spritesheet("shark", "./assets/shark2.png", {
+      frameWidth: 124,
+      frameHeight: 67
+   });
+
+    // player is a sprite sheet made 
+    this.load.spritesheet("player", "./assets/turtle.png", {
+        frameWidth: 72,
+        frameHeight: 55
+    });
+
+    // rocks are a sprite sheet made by 512x512 pixels
+    this.load.spritesheet("rocks", "./assets/rocks.png", {
+      frameWidth: 512,
+      frameHeight: 512
+  });
+
+    // the star is a sprite sheet made by 20x20 pixels
+    this.load.spritesheet("star", "star.png", {
+      frameWidth: 50,
+      frameHeight: 50
+  });
+
   }
 
   create(){
@@ -168,6 +170,29 @@ class preloadGame extends Phaser.Scene{
         repeat: -1
     });
 
+    // setting shark animation
+    this.anims.create({
+      key: "swim",
+      frames: this.anims.generateFrameNumbers("shark", {
+          start: 0,
+          end: 1
+      }),
+      frameRate: 8,
+      repeat: -1
+  });
+
+    // setting star animation
+    this.anims.create({
+      key: "rotate",
+      frames: this.anims.generateFrameNumbers("star", {
+          start: 0,
+          end: 5
+      }),
+      frameRate: 15,
+      yoyo: true,
+      repeat: -1
+  });
+
     this.scene.start("PlayGame");
   }
 }
@@ -179,14 +204,40 @@ class playGame extends Phaser.Scene{
   }
   create(){
 
-    
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
+
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    this.sharkplatforms = this.physics.add.staticGroup();
+    this.coralplatforms = this.physics.add.staticGroup();
+    this.coral = this.physics.add.staticGroup();
+
+    //  Create inivisible shark platforms
+    this.sharkplatforms.create(800, 150, 'sharkplatform');
+    this.sharkplatforms.create(800, 450, 'sharkplatform');
+    this.sharkplatforms.create(400, 250, 'sharkplatform');
+
+    //  Create inivisible coral platforms
+    this.coralplatforms.create(700, 200, 'coralplatform');
+    this.coralplatforms.create(900, 297, 'coralplatform');
+    this.coralplatforms.create(500, 293, 'coralplatform');
+
+    //  Create coral
+    this.coral.create(701, 150, 'coral1');
+    this.coral.create(901, 250, 'coral2');
+    this.coral.create(501, 250, 'coral3');
+
+    // group with all active rocks.
+    this.rocksGroup = this.add.group();
+
+    // adding a rocks
+    this.addRocks()
 
     // adding the player;
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+
 
     this.timeLeft = gameOptions.initialTime;
 
@@ -234,5 +285,123 @@ class playGame extends Phaser.Scene{
 
 
 
+
+    this.player.setBounce(1.5);
+    this.player.setCollideWorldBounds(true);
+
+    // adding the shark;
+    this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, 200, "shark");
+    this.shark.setGravityY(gameOptions.sharkGravity);
+    this.shark.setDepth(2);
+    this.shark.setVelocityY(-100);
+    //this.shark.setVelocityX(-100);
+
+    //shark movement
+    this.shark.factor = 1;
+
+    // the player is not dying
+    this.dying = false;
+
+    if(!this.player.anims.isPlaying){
+      this.player.anims.play("run");
+      this.shark.anims.play("swim");
+   }
+
+   // player movement
+    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.framesMoveUp = 0;
+    this.player.body.allowGravity = false;
+   
+
+    // group with all active stars.
+    this.starGroup = this.add.group({
+
+      // once a star is removed, it's added to the pool
+      removeCallback: function(star){
+          star.scene.coinPool.add(star)
+      }
+  });
+
+    // star pool
+    this.starPool = this.add.group({
+
+      // once a star is removed from the pool, it's added to the active coins group
+      removeCallback: function(star){
+          star.scene.starGroup.add(star)
+      }
+  });
+
   }
+
+  // adding rocks
+  addRocks(){
+    let rightmostRock = this.getRightmostRock();
+    if(rightmostRock < game.config.width * 2){
+        let rock = this.physics.add.sprite(rightmostRock + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "rocks");
+        rock.setOrigin(0.5, 1);
+        rock.body.setVelocityX(gameOptions.rockSpeed * -1)
+        this.rocksGroup.add(rock);
+        if(Phaser.Math.Between(0, 1)){
+            rock.setDepth(1);
+        }
+        rock.setFrame(Phaser.Math.Between(0, 3))
+        this.addRocks()
+    }
+}
+
+  // getting rightmost rock x position
+  getRightmostRock(){
+    let rightmostRock = -200;
+    this.rocksGroup.getChildren().forEach(function(rock){
+        rightmostRock = Math.max(rightmostRock, rock.x);
+    })
+    return rightmostRock;
+  }
+
+  moveTurtle() {
+    // if (gameOver)
+    //     return
+
+    // if (!gameStarted)
+    //     startGame(game.scene.scenes[0])
+
+    this.player.setVelocityY(-380)
+    this.player.angle = -20
+    this.framesMoveUp = 25
+}
+
+  update(){
+    // recycling rocks
+    this.rocksGroup.getChildren().forEach(function(rock){
+      if(rock.x < - rock.displayWidth){
+          let rightmostRock = this.getRightmostRock();
+          rock.x = rightmostRock + Phaser.Math.Between(100, 350);
+          rock.y = game.config.height + Phaser.Math.Between(0, 100);
+          rock.setFrame(Phaser.Math.Between(0, 3))
+          if(Phaser.Math.Between(0, 1)){
+              rock.setDepth(1);
+          }
+      }
+  }, this);
+
+  if (this.framesMoveUp > 0)
+        this.framesMoveUp--
+    else if (Phaser.Input.Keyboard.JustDown(this.upButton))
+        this.moveTurtle()
+    else {
+        this.player.setVelocityY(100)
+
+        if (this.player.angle < 60)
+            this.player.angle += 1
+    }
+
+    this.physics.add.collider(this.shark, this.sharkplatforms);
+    this.shark.body.setBounce(1);
+
+   
+   // check if enemy's step counter has reach limit
+   this.shark.body.velocity.x = this.shark.factor * -50; 
+
+  }
+  
 }
