@@ -2,6 +2,9 @@ let game;
 
 // global game options
 let gameOptions = {
+  
+
+    initialTime: 60,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -62,6 +65,15 @@ window.onload = function() {
             width: 1280,
             height: 720
         },
+        audio: {
+            mute: false,
+            volume: 20,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: false,
+            delay: 0
+        },
         scene: [preloadGame, playGame],
         //backgroundColor: 0x0c88c7,
 
@@ -85,6 +97,25 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
+
+
+   
+
+    this.load.image('sea', './assets/sea-background.jpg');
+
+    // player is a sprite sheet made by 24x48 pixels
+    this.load.spritesheet("player", "./assets/side.png", {
+        frameWidth: 20,
+        frameHeight: 24
+    });
+
+    this.load.image("energycontainer", "./assets/energycontainer.png");
+    this.load.image("energybar", "./assets/energybar.png");
+    this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
+    this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
+    this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
+    this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
+
     // main sea background
     this.load.image('sea', './assets/sea-background-main.jpg');
 
@@ -122,10 +153,12 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 50,
       frameHeight: 50
   });
+
   }
 
   create(){
 
+  
     // setting player animation
     this.anims.create({
         key: "run",
@@ -204,6 +237,55 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+
+
+    this.timeLeft = gameOptions.initialTime;
+
+    var bgmusic = this.sound.add('backgroundmusic');
+    bgmusic.play()
+
+    
+    let energyContainer = this.add.sprite(1100, 45, "energycontainer");
+
+  
+    let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
+
+   
+    this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
+
+  
+    this.energyMask.visible = false;
+
+    energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
+
+    
+    this.gameTimer = this.time.addEvent({
+        delay: 1000,
+        callback: function(){
+
+          // if (obstacle.hit === true) {
+            // this.timeLeft -= 3;
+        // } else if (item.collect === true) {
+          // this.timeLeft += 3;
+        // }
+          // } else {
+            this.timeLeft --;
+          // }
+
+            let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
+
+            this.energyMask.x -= stepWidth;
+            if(this.timeLeft == 0){
+                this.scene.start("PlayGame")
+            }
+        },
+        callbackScope: this,
+        loop: true
+    });
+
+
+
+
     this.player.setBounce(1.5);
     this.player.setCollideWorldBounds(true);
 
@@ -248,6 +330,7 @@ class playGame extends Phaser.Scene{
           star.scene.starGroup.add(star)
       }
   });
+
   }
 
   // adding rocks
