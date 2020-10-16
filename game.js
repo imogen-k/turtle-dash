@@ -276,7 +276,7 @@ class playGame extends Phaser.Scene{
     //this.shark.setVelocityX(-100);
 
     //shark movement
-    //this.shark.factor = 1;
+    this.shark.factor = 1;
 
     // the player is not dying
     this.dying = false;
