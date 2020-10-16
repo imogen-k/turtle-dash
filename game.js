@@ -320,8 +320,5 @@ class playGame extends Phaser.Scene{
    this.shark.body.velocity.x = this.shark.factor * -50; 
 
   }
-
-  
-  
   
 }
