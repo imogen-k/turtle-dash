@@ -285,10 +285,12 @@ class playGame extends Phaser.Scene{
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
 
-    this.timeLeft = gameOptions.initialTime;
-
+    // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
     bgmusic.play()
+
+    // settiing the timer
+    this.timeLeft = gameOptions.initialTime;
 
     let energyContainer = this.add.sprite(1100, 45, "energycontainer");
 
@@ -455,8 +457,8 @@ class playGame extends Phaser.Scene{
     //     startGame(game.scene.scenes[0])
 
     this.player.setVelocityY(-380)
-    this.player.angle = -20
-    this.framesMoveUp = 25
+    this.player.angle = 0
+    this.framesMoveUp = 15
 }
 
   update(){
@@ -480,7 +482,7 @@ class playGame extends Phaser.Scene{
     else {
         this.player.setVelocityY(100)
 
-        if (this.player.angle < 60)
+        if (this.player.angle < 50)
             this.player.angle += 1
     }
 
