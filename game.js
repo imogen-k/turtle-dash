@@ -98,8 +98,9 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
-
-   
+    // this.load.on('progress', function() {
+    //   this.scene.start("LoadingScene")
+    // });
 
     this.load.image('sea', './assets/sea-background.jpg');
 
@@ -187,6 +188,8 @@ class preloadGame extends Phaser.Scene{
       yoyo: true,
       repeat: -1
   });
+
+  
 
     this.scene.start("StartMenu");
   }
