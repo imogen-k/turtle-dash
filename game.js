@@ -4,7 +4,7 @@ let game;
 let gameOptions = {
   
 
-    initialTime: 60,
+    initialTime: 120,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -74,7 +74,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [preloadGame, startMenu, playGame],
+        scene: [preloadGame, startMenu, playGame, endScreen],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -120,7 +120,10 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral1', './assets/coral1.png');
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
+
+    //buttons
     this.load.image('playButton', './assets/play-button.png');
+    this.load.image('playAgain', './assets/play-again.png');
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -250,7 +253,7 @@ class playGame extends Phaser.Scene{
 
     energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
 
-    
+  
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -263,12 +266,13 @@ class playGame extends Phaser.Scene{
           // } else {
             this.timeLeft --;
           // }
-
+          
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
-            if(this.timeLeft == 0){
-                this.scene.start("PlayGame")
+            if(this.timeLeft === 60){
+                bgmusic.stop()
+                this.scene.start("EndScreen")
             }
         },
         callbackScope: this,
