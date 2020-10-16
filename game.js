@@ -194,7 +194,7 @@ class playGame extends Phaser.Scene{
     bgmusic.play()
 
     
-    let energyContainer = this.add.sprite(150, 45, "energycontainer");
+    let energyContainer = this.add.sprite(1100, 45, "energycontainer");
 
   
     let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
