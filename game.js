@@ -50,7 +50,9 @@ let gameOptions = {
     starPercent: 25,
 
     // % of probability a fire appears on the platform
-    firePercent: 25
+    firePercent: 25,
+
+    scores: []
 }
 
 window.onload = function() {
@@ -131,8 +133,6 @@ class preloadGame extends Phaser.Scene{
     this.load.image('playButton', './assets/play-button.png');
     this.load.image('playAgain', './assets/play-again.png');
     this.load.image('submitScore', './assets/submit-score.png');
-
-    this.scoreList = [];
 
     // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {

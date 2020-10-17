@@ -14,14 +14,16 @@ class endScreen extends Phaser.Scene {
       this.add.text(640, 80, 'Enter your name:')
       
       
-    var inputText = this.add.rexInputText(400, 150, 10, 10, {
+    this.inputText = this.add.rexInputText(400, 150, 10, 10, {
         type: 'textarea',
-        text: 'hello this is input field',
+        text: 'your name',
         fontSize: '12px',
     })
         .resize(100, 100)
         .setOrigin(0.5)
         .on('textchange', function (inputText) {
+            console.log('showing what user is typing')
+            console.log(inputText.text)
         })
         .on('focus', function (inputText) {
             console.log('On focus');
@@ -36,11 +38,13 @@ class endScreen extends Phaser.Scene {
             console.log('On dblclick');
         })
 
+
+
         var scores = this.add.image(600, 200, 'submitScore')
 
         scores.setInteractive();
         scores.on('pointerdown', () => {
-          this.scoreList.push(inputText)
+        gameOptions.scores.push(this.inputText.text)
           this.scene.start("ScoreScene");
         })
 

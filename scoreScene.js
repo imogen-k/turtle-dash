@@ -6,19 +6,30 @@ class scoreScene extends Phaser.Scene {
      
   
     create() {
+
+        // var printText = this.add.text(400, 200, '', {
+        //     fontSize: '12px',
+        // }).setOrigin(0.5).setFixedSize(100, 100);
+
+
   
         
         this.add.image(640, 360, 'sea')
   
-        this.add.text(640, 60, 'SCORE: (enter last score here)', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif' })
-        this.add.text(640, 80, 'Enter your name:')
+        this.add.text(550, 60, 'HIGH SCORES', { fontFamily: 'Helvetica Neue' })
+        this.add.text(550, 90, 'Name:', { fontFamily: 'Helvetica Neue' })
+        
+        this.add.text(550, 110, gameOptions.scores)
 
-        
-        
-     
-        var text2 = game.add.text(32, 120, '', style);
-         text2.parseList(this.scoreList);
-      
+
+       
+
+
+
+
+
+
+
   
 
   
@@ -27,7 +38,7 @@ class scoreScene extends Phaser.Scene {
         again.setInteractive();
   
         again.on('pointerdown', () => { 
-       
+        this.y += 100
         this.scene.start("PlayGame");
     
     });
