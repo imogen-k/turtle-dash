@@ -8,7 +8,6 @@ class startMenu extends Phaser.Scene {
     create() {
         this.add.image(640, 360, 'sea')
         var play = this.add.image(640, 360, 'playButton')
-
         play.setInteractive();
 
         play.on('pointerdown', () => { 
