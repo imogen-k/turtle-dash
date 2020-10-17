@@ -1,5 +1,3 @@
-//const { createBuilderStatusReporter } = require("typescript");
-
 let game;
 
 // global game options
@@ -292,39 +290,28 @@ class playGame extends Phaser.Scene{
     // settiing the timer
     this.timeLeft = gameOptions.initialTime;
 
-    let energyContainer = this.add.sprite(1100, 45, "energycontainer");
-
-    let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
-
-    this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
-
-    this.energyMask.visible = false;
-
-    energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
+    let energyContainer = this.add.image(925, 0, "energycontainer").setOrigin(0,0);
+    this.energyBar = this.add.image(energyContainer.x, energyContainer.y, "energybar");
+    this.energyBar.setOrigin(0,0)
 
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
-
-          // if (obstacle.hit === true) {
-            // this.timeLeft -= 3;
-        // } else if (item.collect === true) {
-          // this.timeLeft += 3;
-        // }
-          // } else {
             this.timeLeft --;
-          // }
-
-            let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
-
-            this.energyMask.x -= stepWidth;
-            if(this.timeLeft === 60){
+            let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime 
+            if(percentageOfTimeLeft < 1) {
+              this.energyBar.setSize(400, 300)
+              this.energyBar.setScale(percentageOfTimeLeft,1)
+            }
+            if(this.timeLeft === 0){
                 this.scene.start("PlayGame")
             }
         },
         callbackScope: this,
         loop: true
     });
+
+
     this.player.setBounce(1.5);
     this.player.setCollideWorldBounds(true);
 
@@ -434,12 +421,7 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(star);
               this.stars.remove(star);
-              if(this.timeLeft > 60) {
-                this.timeLeft += 1;
-              }
-
-              let stepWidth = this.energyMask.width * gameOptions.initialTime;
-              this.energyMask.x += stepWidth;
+              this.timeLeft += 1
           }
       });
 
@@ -461,9 +443,6 @@ class playGame extends Phaser.Scene{
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
-
-              let stepWidth = this.energyMask.width * gameOptions.initialTime;
-              this.energyMask.x += stepWidth;
           }
       });
 
@@ -485,9 +464,6 @@ class playGame extends Phaser.Scene{
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
-
-              let stepWidth = this.energyMask.width * gameOptions.initialTime;
-              this.energyMask.x += stepWidth;
           }
       });
 
@@ -506,24 +482,12 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(net);
               this.stars.remove(net);
-              if(this.timeLeft > 60) {
-                this.timeLeft += 1;
-              }
-
-              let stepWidth = this.energyMask.width * gameOptions.initialTime;
-              this.energyMask.x += stepWidth;
+              this.timeLeft += 1
           }
       });
 
     }, null, this);
   }
-
-  collectStar(player, star){
-    star.destroy();
-
-
-  }
-
 
   // adding rocks
   addRocks(){
@@ -560,9 +524,12 @@ class playGame extends Phaser.Scene{
     this.player.setVelocityY(-380)
     this.player.angle = 0
     this.framesMoveUp = 15
-}
+  }
+
+
 
   update(){
+
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
       if(rock.x < - rock.displayWidth){
