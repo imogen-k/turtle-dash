@@ -304,19 +304,25 @@ class playGame extends Phaser.Scene{
       bgmusic.stop()
     });
 
-    // muting sound effects 
+    // muting sound effects
+   
+    if (gameOptions.SFXmuted === false) {
+      var muteSFX = this.add.text(200, 40, 'SFX off')
+      muteSFX.setInteractive();
+      muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = true
+        });
+    }
 
-    var muteSFX = this.add.text(200, 40, 'SFX off')
-    muteSFX.setInteractive();
+    if (gameOptions.SFXmuted === true) {
+      var unmuteSFX = this.add.text(200, 40, 'SFX on')
+      unmuteSFX.setInteractive();
+      unmuteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = false
+        });
+    }
 
-    muteSFX.on('pointerdown', () => {
-      gameOptions.SFXmuted = true
-      starCollected.destroy()
-      obstacleHit.destroy()
-      jellymodesound.destroy()
-    });
 
-    
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
