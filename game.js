@@ -98,21 +98,17 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
-
+    
     this.load.image('sea', './assets/sea-background.jpg');
-
+    this.load.image('floorboundary', './assets/floorboundary.png')
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
+    
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
     this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
     this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
     this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
 
-    // invisible shark platform
-    this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
-
-    // invisible coral platform
-    this.load.image('coralplatform', './assets/invisible-coral-platform1.png');
 
     // coral
     this.load.image('coral1', './assets/coral1.png');
@@ -123,61 +119,56 @@ class preloadGame extends Phaser.Scene{
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
-   });
+    });
 
     // player is a sprite sheet made
     this.load.spritesheet("player", "./assets/turtle.png", {
-        frameWidth: 72,
-        frameHeight: 55
+      frameWidth: 72,
+      frameHeight: 55
     });
 
     // rocks are a sprite sheet made by 512x512 pixels
     this.load.spritesheet("rocks", "./assets/rocks.png", {
       frameWidth: 512,
       frameHeight: 512
-  });
+    });
 
     // the star is a sprite sheet made by 50x50 pixels
     this.load.spritesheet("star", "./assets/star.png", {
       frameWidth: 50,
       frameHeight: 50
-  });
+    });
 
-  // the jellyfish is a sprite sheet made by 50x50 pixels
-  this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
-    frameWidth: 50,
-    frameHeight: 50
+    // the jellyfish is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
+      frameWidth: 50,
+      frameHeight: 50
+    });
 
-  });
+    // the trash is a sprite sheet made by 100x100 pixels
+    this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+      frameWidth: 100,
+      frameHeight: 100
+    });
 
-  // the jellyfish is a sprite sheet made by 100x100 pixels
-  this.load.spritesheet("trashbag", "./assets/trashbag.png", {
-    frameWidth: 100,
-    frameHeight: 100
-
-  });
-
-  // the net is a sprite sheet made by 50x50 pixels
-  this.load.spritesheet("net", "./assets/net.png", {
-    frameWidth: 100,
-    frameHeight: 100
-
-  });
-
+    // the net is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("net", "./assets/net.png", {
+      frameWidth: 100,
+      frameHeight: 100
+    });
   }
 
   create(){
-
-
+    
     // setting player animation
     this.anims.create({
-        key: "run",
-        frames: this.anims.generateFrameNumbers("player", {
-            start: 0,
-            end: 1
-        }),
-        frameRate: 8,
-        repeat: -1
+      key: "run",
+      frames: this.anims.generateFrameNumbers("player", {
+          start: 0,
+          end: 1
+      }),
+      frameRate: 8,
+      repeat: -1
     });
 
     // setting shark animation
@@ -188,8 +179,9 @@ class preloadGame extends Phaser.Scene{
           end: 1
       }),
       frameRate: 8,
+      yoyo: true,
       repeat: -1
-  });
+    });
 
     // setting star animation
     this.anims.create({
@@ -201,44 +193,43 @@ class preloadGame extends Phaser.Scene{
       frameRate: 8,
       yoyo: true,
       repeat: -1
-  });
+    });
 
-  // setting jellyfish animation
-  this.anims.create({
-    key: "jellyfishpulse",
-    frames: this.anims.generateFrameNumbers("jellyfish", {
+    // setting jellyfish animation
+    this.anims.create({
+      key: "jellyfishpulse",
+      frames: this.anims.generateFrameNumbers("jellyfish", {
+          start: 0,
+          end: 5
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
+
+    // setting trashbag animation
+    this.anims.create({
+      key: "trashbagpulse",
+      frames: this.anims.generateFrameNumbers("trashbag", {
         start: 0,
         end: 5
-    }),
-    frameRate: 8,
-    yoyo: true,
-    repeat: -1
-});
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
 
-// setting trashbag animation
-this.anims.create({
-  key: "trashbagpulse",
-  frames: this.anims.generateFrameNumbers("trashbag", {
-      start: 0,
-      end: 5
-  }),
-  frameRate: 8,
-  yoyo: true,
-  repeat: -1
-});
-
-// setting net animation
-this.anims.create({
-  key: "netpulse",
-  frames: this.anims.generateFrameNumbers("net", {
-      start: 0,
-      end: 5
-  }),
-  frameRate: 8,
-  yoyo: true,
-  repeat: -1
-});
-
+    // setting net animation
+    this.anims.create({
+      key: "netpulse",
+        frames: this.anims.generateFrameNumbers("net", {
+          start: 0,
+          end: 5
+        }),
+        frameRate: 8,
+        yoyo: true,
+        repeat: -1
+      });
 
     this.scene.start("PlayGame");
   }
@@ -254,21 +245,10 @@ class playGame extends Phaser.Scene{
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
-    this.sharkplatforms = this.physics.add.staticGroup();
-    this.coralplatforms = this.physics.add.staticGroup();
+    this.floor = this.physics.add.staticGroup();
+    this.floor.create(gameOptions.playerStartPosition, 720,'floorboundary')
+    
     this.coral = this.physics.add.staticGroup();
-
-    //  Create inivisible shark platforms
-    this.sharkplatforms.create(800, 150, 'sharkplatform');
-    this.sharkplatforms.create(800, 450, 'sharkplatform');
-    this.sharkplatforms.create(400, 250, 'sharkplatform');
-
-    //  Create inivisible coral platforms
-    this.coralplatforms.create(700, 200, 'coralplatform');
-    this.coralplatforms.create(900, 297, 'coralplatform');
-    this.coralplatforms.create(500, 293, 'coralplatform');
-
     //  Create coral
     this.coral.create(701, 150, 'coral1');
     this.coral.create(901, 250, 'coral2');
@@ -284,6 +264,8 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+
+    this.physics.add.overlap(this.player, this.floor,this.scene.start("PlayGame"),null,this)
 
     // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
@@ -423,7 +405,6 @@ class playGame extends Phaser.Scene{
      //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
-
       this.tweens.add({
           targets: star,
           y: star.y - 100,
@@ -437,17 +418,14 @@ class playGame extends Phaser.Scene{
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
-
               let stepWidth = this.energyMask.width * gameOptions.initialTime;
               this.energyMask.x += stepWidth;
           }
-      });
-
-    }, null, this);
+        });
+       }, null, this);
 
      //  Setting collisions for jellyfish
      this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
-
       this.tweens.add({
           targets: jellyfish,
           y: jellyfish.y - 100,
@@ -461,7 +439,6 @@ class playGame extends Phaser.Scene{
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
-
               let stepWidth = this.energyMask.width * gameOptions.initialTime;
               this.energyMask.x += stepWidth;
           }
@@ -520,8 +497,6 @@ class playGame extends Phaser.Scene{
 
   collectStar(player, star){
     star.destroy();
-
-
   }
 
 
