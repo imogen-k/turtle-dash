@@ -51,7 +51,10 @@ let gameOptions = {
     starPercent: 25,
 
     // % of probability a fire appears on the platform
-    firePercent: 25
+    firePercent: 25,
+
+    // sfx muted
+    SFXmuted: false
 }
 
 window.onload = function() {
@@ -118,6 +121,9 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral1', './assets/coral1.png');
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
+
+    // mute buttons
+    this.load.image('mute', './assets/mute-white.png');
 
     // shark is a sprite sheet made
     this.load.spritesheet("shark", "./assets/shark2.png", {
@@ -290,6 +296,28 @@ class playGame extends Phaser.Scene{
     var bgmusic = this.sound.add('backgroundmusic');
     bgmusic.play()
 
+    // muting background music
+    var muteMusic = this.add.text(60, 40, 'Music off')
+    muteMusic.setInteractive();
+
+    muteMusic.on('pointerdown', () => {
+      bgmusic.stop()
+    });
+
+    // muting sound effects 
+
+    var muteSFX = this.add.text(200, 40, 'SFX off')
+    muteSFX.setInteractive();
+
+    muteSFX.on('pointerdown', () => {
+      gameOptions.SFXmuted = true
+      starCollected.destroy()
+      obstacleHit.destroy()
+      jellymodesound.destroy()
+    });
+
+    
+
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
     var obstacleHit = this.sound.add("obstaclehit");
@@ -429,7 +457,9 @@ class playGame extends Phaser.Scene{
      //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
-      starCollected.play()
+      if (gameOptions.SFXmuted === false) {
+        starCollected.play()
+      }
       this.tweens.add({
           targets: star,
           y: star.y - 100,
@@ -454,7 +484,11 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for jellyfish
      this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
+        
+      if (gameOptions.SFXmuted === false) {
         jellymodesound.play()
+      }
+      
       this.tweens.add({
           targets: jellyfish,
           y: jellyfish.y - 100,
@@ -481,7 +515,9 @@ class playGame extends Phaser.Scene{
     //  Setting collisions for trashbags
     this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
       
-      obstacleHit.play()
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: trashbag,
           y: trashbag.y - 100,
@@ -506,7 +542,9 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for trashbags
      this.physics.add.overlap(this.player, this.nets, function(player, net){
-      obstacleHit.play()
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: net,
           y: net.y - 100,
