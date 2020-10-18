@@ -302,10 +302,18 @@ class playGame extends Phaser.Scene{
 
     muteMusic.on('pointerdown', () => {
       bgmusic.stop()
+      muteMusic.destroy()
+      var unmuteMusic  = this.add.text(60, 40, 'Music on')
+      unmuteMusic.setInteractive()
+      unmuteMusic.on('pointerdown', () => {
+        bgmusic.play()
+        unmuteMusic.destroy()
+        var muteMusic  = this.add.text(60, 40, 'Music off')
+      });
     });
+    
 
     // muting sound effects
-   
     if (gameOptions.SFXmuted === false) {
       var muteSFX = this.add.text(200, 40, 'SFX off')
       muteSFX.setInteractive();
@@ -321,8 +329,6 @@ class playGame extends Phaser.Scene{
           gameOptions.SFXmuted = false
         });
     }
-
-
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
