@@ -242,18 +242,14 @@ class playGame extends Phaser.Scene{
   }
   create(){
 
-    //  A simple background for our game
-    this.add.image(640, 360, 'sea')
-
+    this.physics.world.setBoundsCollision(false,true,true,true) //doesn't collide with left boundary
+    
+    this.add.image(640, 360, 'sea'); //  A simple background for our game
+    
     //  The platforms group contains the ground and the 2 ledges we can jump on
-    //this.sharkplatforms = this.physics.add.staticGroup();
     this.coralplatforms = this.physics.add.staticGroup();
     this.coral = this.physics.add.staticGroup();
 
-    //  Create inivisible shark platforms
-    //this.sharkplatforms.create(800, 150, 'sharkplatform');
-    //this.sharkplatforms.create(800, 450, 'sharkplatform');
-    //this.sharkplatforms.create(400, 250, 'sharkplatform');
 
     //  Create inivisible coral platforms
     this.coralplatforms.create(700, 200, 'coralplatform');
@@ -322,14 +318,12 @@ class playGame extends Phaser.Scene{
 
     // adding the shark;
     this.shark = this.physics.add.sprite(0, 360, "shark");
-    //this.shark.setGravityY(gameOptions.sharkGravity);
+    this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
-    //this.shark.setVelocityY(0);
-    //this.shark.setVelocityX(-100);
-    //shark movement
-    //this.shark.factor = 1;
-
+    
+    
+   
     // the player is not dying
     this.dying = false;
 
@@ -548,7 +542,8 @@ class playGame extends Phaser.Scene{
     this.framesMoveUp = 15
   }
 
-  sharkMimicsTurtle() {
+  sharkMovement() {
+    this.shark.setVelocityX(10)
     if(this.shark.y < this.player.y) {
       this.shark.setVelocityY(90)
       this.shark.angle = 30
@@ -556,14 +551,11 @@ class playGame extends Phaser.Scene{
       this.shark.setVelocityY(-90)
       this.shark.angle = 0
     }
-    
-    
-    //this.shark.y = this.player.y-100
   }
 
   update(){
 
-    this.sharkMimicsTurtle()
+    this.sharkMovement()
 
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
