@@ -413,7 +413,7 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(star);
               this.stars.remove(star);
-              //this.timeLeft += 1
+              this.timeLeft += 1
           }
       });
 
@@ -432,7 +432,7 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(jellyfish);
               this.stars.remove(jellyfish);
-              //this.timeLeft += 1;
+              this.timeLeft += 1;
           }
       });
 
@@ -451,7 +451,7 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(trashbag);
               this.stars.remove(trashbag);
-              //this.timeLeft -= 1;
+              this.timeLeft -= 1;
           }
       });
 
@@ -470,7 +470,7 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(net);
               this.stars.remove(net);
-              //this.timeLeft -= 1
+              this.timeLeft -= 1
           }
       });
 
@@ -517,7 +517,7 @@ class playGame extends Phaser.Scene{
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
     if(percentageOfTimeLeft < 1) {
-      this.energyBar.setSize(400, 300)
+      this.energyBar.setSize(200, 300)
       this.energyBar.setScale(percentageOfTimeLeft,1)
     }
   }
