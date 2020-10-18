@@ -33,16 +33,16 @@ let gameOptions = {
     playerGravity: 25,
 
     // shark gravity
-    sharkGravity: 40,
+    sharkGravity: 25,
 
     // player jump force
     jumpForce: 400,
 
     // player starting X position
-    playerStartPosition: 200,
+    playerStartPosition: 425,
 
     // shark starting X position
-    sharkStartPosition: 800,
+    sharkStartPosition: 0,
 
     // consecutive jumps allowed
     jumps: 2,
@@ -108,9 +108,6 @@ class preloadGame extends Phaser.Scene{
     this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
     this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
 
-    // invisible shark platform
-    this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
-
     // invisible coral platform
     this.load.image('coralplatform', './assets/invisible-coral-platform1.png');
 
@@ -120,10 +117,10 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral3', './assets/coral3.png');
 
     // shark is a sprite sheet made
-    this.load.spritesheet("shark", "./assets/shark2.png", {
+    this.load.spritesheet("shark", "./assets/shark.png", {
       frameWidth: 124,
       frameHeight: 67
-   });
+    });
 
     // player is a sprite sheet made
     this.load.spritesheet("player", "./assets/turtle.png", {
@@ -135,49 +132,44 @@ class preloadGame extends Phaser.Scene{
     this.load.spritesheet("rocks", "./assets/rocks.png", {
       frameWidth: 512,
       frameHeight: 512
-  });
+    });
 
     // the star is a sprite sheet made by 50x50 pixels
     this.load.spritesheet("star", "./assets/star.png", {
       frameWidth: 50,
       frameHeight: 50
-  });
+    });
 
-  // the jellyfish is a sprite sheet made by 50x50 pixels
-  this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
-    frameWidth: 50,
-    frameHeight: 50
+    // the jellyfish is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
+      frameWidth: 50,
+      frameHeight: 50
+    });
 
-  });
+    // the trash is a sprite sheet made by 100x100 pixels
+    this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+      frameWidth: 100,
+      frameHeight: 100
+    });
 
-  // the jellyfish is a sprite sheet made by 100x100 pixels
-  this.load.spritesheet("trashbag", "./assets/trashbag.png", {
-    frameWidth: 100,
-    frameHeight: 100
-
-  });
-
-  // the net is a sprite sheet made by 50x50 pixels
-  this.load.spritesheet("net", "./assets/net.png", {
-    frameWidth: 100,
-    frameHeight: 100
-
-  });
-
+    // the net is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("net", "./assets/net.png", {
+      frameWidth: 100,
+      frameHeight: 100
+    });
   }
 
   create(){
 
-
     // setting player animation
     this.anims.create({
-        key: "run",
-        frames: this.anims.generateFrameNumbers("player", {
-            start: 0,
-            end: 1
-        }),
-        frameRate: 8,
-        repeat: -1
+      key: "run",
+      frames: this.anims.generateFrameNumbers("player", {
+          start: 0,
+          end: 1
+      }),
+      frameRate: 8,
+      repeat: -1
     });
 
     // setting shark animation
@@ -189,56 +181,55 @@ class preloadGame extends Phaser.Scene{
       }),
       frameRate: 8,
       repeat: -1
-  });
+    });
 
     // setting star animation
     this.anims.create({
       key: "starpulse",
       frames: this.anims.generateFrameNumbers("star", {
-          start: 0,
-          end: 5
+        start: 0,
+        end: 5
       }),
       frameRate: 8,
       yoyo: true,
       repeat: -1
-  });
+    });
 
-  // setting jellyfish animation
-  this.anims.create({
-    key: "jellyfishpulse",
-    frames: this.anims.generateFrameNumbers("jellyfish", {
+    // setting jellyfish animation
+    this.anims.create({
+      key: "jellyfishpulse",
+      frames: this.anims.generateFrameNumbers("jellyfish", {
         start: 0,
         end: 5
-    }),
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
+
+    // setting trashbag animation
+    this.anims.create({
+      key: "trashbagpulse",
+      frames: this.anims.generateFrameNumbers("trashbag", {
+        start: 0,
+        end: 5
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
+
+    // setting net animation
+    this.anims.create({
+      key: "netpulse",
+      frames: this.anims.generateFrameNumbers("net", {
+        start: 0,
+        end: 5
+      }),
     frameRate: 8,
     yoyo: true,
     repeat: -1
-});
-
-// setting trashbag animation
-this.anims.create({
-  key: "trashbagpulse",
-  frames: this.anims.generateFrameNumbers("trashbag", {
-      start: 0,
-      end: 5
-  }),
-  frameRate: 8,
-  yoyo: true,
-  repeat: -1
-});
-
-// setting net animation
-this.anims.create({
-  key: "netpulse",
-  frames: this.anims.generateFrameNumbers("net", {
-      start: 0,
-      end: 5
-  }),
-  frameRate: 8,
-  yoyo: true,
-  repeat: -1
-});
-
+    });
 
     this.scene.start("PlayGame");
   }
@@ -255,14 +246,14 @@ class playGame extends Phaser.Scene{
     this.add.image(640, 360, 'sea')
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
-    this.sharkplatforms = this.physics.add.staticGroup();
+    //this.sharkplatforms = this.physics.add.staticGroup();
     this.coralplatforms = this.physics.add.staticGroup();
     this.coral = this.physics.add.staticGroup();
 
     //  Create inivisible shark platforms
-    this.sharkplatforms.create(800, 150, 'sharkplatform');
-    this.sharkplatforms.create(800, 450, 'sharkplatform');
-    this.sharkplatforms.create(400, 250, 'sharkplatform');
+    //this.sharkplatforms.create(800, 150, 'sharkplatform');
+    //this.sharkplatforms.create(800, 450, 'sharkplatform');
+    //this.sharkplatforms.create(400, 250, 'sharkplatform');
 
     //  Create inivisible coral platforms
     this.coralplatforms.create(700, 200, 'coralplatform');
@@ -281,9 +272,11 @@ class playGame extends Phaser.Scene{
     this.addRocks()
 
     // adding the player;
-    this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
+    this.player = this.physics.add.sprite(320, 360, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+    this.player.setBounce(1.5);
+    this.player.setCollideWorldBounds(true);
 
     // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
@@ -325,18 +318,17 @@ class playGame extends Phaser.Scene{
         callbackScope: this,
         loop: true
     });
-    this.player.setBounce(1.5);
-    this.player.setCollideWorldBounds(true);
+    
 
     // adding the shark;
-    this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, 200, "shark");
-    this.shark.setGravityY(gameOptions.sharkGravity);
+    this.shark = this.physics.add.sprite(0, 360, "shark");
+    //this.shark.setGravityY(gameOptions.sharkGravity);
     this.shark.setDepth(2);
-    this.shark.setVelocityY(-100);
+    this.shark.setCollideWorldBounds(true);
+    //this.shark.setVelocityY(0);
     //this.shark.setVelocityX(-100);
-
     //shark movement
-    this.shark.factor = 1;
+    //this.shark.factor = 1;
 
     // the player is not dying
     this.dying = false;
@@ -344,7 +336,7 @@ class playGame extends Phaser.Scene{
     if(!this.player.anims.isPlaying){
       this.player.anims.play("run");
       this.shark.anims.play("swim");
-   }
+    }
 
    // player movement
     this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -551,49 +543,50 @@ class playGame extends Phaser.Scene{
   }
 
   moveTurtle() {
-    // if (gameOver)
-    //     return
-
-    // if (!gameStarted)
-    //     startGame(game.scene.scenes[0])
-
     this.player.setVelocityY(-380)
     this.player.angle = 0
     this.framesMoveUp = 15
-}
+  }
+
+  sharkMimicsTurtle() {
+    if(this.shark.y < this.player.y) {
+      this.shark.setVelocityY(90)
+      this.shark.angle = 30
+    } else {
+      this.shark.setVelocityY(-90)
+      this.shark.angle = 0
+    }
+    
+    
+    //this.shark.y = this.player.y-100
+  }
 
   update(){
+
+    this.sharkMimicsTurtle()
+
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
       if(rock.x < - rock.displayWidth){
-          let rightmostRock = this.getRightmostRock();
-          rock.x = rightmostRock + Phaser.Math.Between(100, 350);
-          rock.y = game.config.height + Phaser.Math.Between(0, 100);
-          rock.setFrame(Phaser.Math.Between(0, 3))
-          if(Phaser.Math.Between(0, 1)){
-              rock.setDepth(1);
-          }
+        let rightmostRock = this.getRightmostRock();
+        rock.x = rightmostRock + Phaser.Math.Between(100, 350);
+        rock.y = game.config.height + Phaser.Math.Between(0, 100);
+        rock.setFrame(Phaser.Math.Between(0, 3))
+        if(Phaser.Math.Between(0, 1)){
+            rock.setDepth(1);
+        }
       }
-  }, this);
+    }, this);
 
-  if (this.framesMoveUp > 0)
-        this.framesMoveUp--
-    else if (Phaser.Input.Keyboard.JustDown(this.upButton))
-        this.moveTurtle()
-    else {
-        this.player.setVelocityY(100)
-
-        if (this.player.angle < 50)
-            this.player.angle += 1
+    if (this.framesMoveUp > 0) {
+      this.framesMoveUp--
+    } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
+      this.moveTurtle()
+    } else {
+      this.player.setVelocityY(100)
+      if (this.player.angle < 50) {
+        this.player.angle += 1
+      }
     }
-
-    this.physics.add.collider(this.shark, this.sharkplatforms);
-    this.shark.body.setBounce(1);
-
-
-   // check if enemy's step counter has reach limit
-   this.shark.body.velocity.x = this.shark.factor * -50;
-
   }
-
 }
