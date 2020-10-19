@@ -170,6 +170,9 @@ class preloadGame extends Phaser.Scene{
     this.load.image('playAgain', './assets/play-again-btn.png');
     this.load.image('submitScore', './assets/submit-score-btn.png');
 
+    // how to play screen
+    this.load.image('howtoplay', './assets/how-to-play.png');
+
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
 
