@@ -728,7 +728,7 @@ class playGame extends Phaser.Scene{
 
     if (gameOptions.musicMuted === false) {
       this.muteMusic.setText("Music")
-      this.image.add( 100, 100, 'sound-off')
+      //this.image.add( 100, 100, 'sound-off')
       this.muteMusic.setInteractive()
       this.muteMusic.on('pointerdown', () => {
         this.bgmusic.stop()
@@ -738,7 +738,7 @@ class playGame extends Phaser.Scene{
 
     if (gameOptions.musicMuted === true) {
       this.muteMusic.setText("Music")
-      this.image.add( 100, 100, 'sound-on')
+      //this.image.add( 100, 100, 'sound-on')
       this.muteMusic.setInteractive()
       this.muteMusic.on('pointerdown', () => {
         this.bgmusic.play()
