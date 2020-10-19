@@ -146,9 +146,9 @@ class preloadGame extends Phaser.Scene{
 
 
     // coral
-    this.load.image('coral1', './assets/coral1.png');
-    this.load.image('coral2', './assets/coral2.png');
-    this.load.image('coral3', './assets/coral3.png');
+    this.load.image('yellowcoral', './assets/coral1.png');
+    this.load.image('greencoral', './assets/coral2.png');
+    this.load.image('pinkcoral', './assets/coral3.png');
 
 
     // mute buttons
@@ -167,9 +167,11 @@ class preloadGame extends Phaser.Scene{
     });
 
     // player is a sprite sheet made
-    this.load.spritesheet("player", "./assets/turtle.png", {
-      frameWidth: 72,
-      frameHeight: 55
+
+    this.load.spritesheet("player", "./assets/turtle-main.png", {
+        frameWidth: 72,
+        frameHeight: 55
+
     });
 
     // rocks are a sprite sheet made by 512x512 pixels
@@ -213,14 +215,26 @@ class preloadGame extends Phaser.Scene{
     
     // setting player animation
     this.anims.create({
-      key: "run",
+
+        key: "run",
+        frames: this.anims.generateFrameNumbers("player", {
+            start: 0,
+            end: 3
+        }),
+        frameRate: 8,
+        repeat: -1
+    });
+
+    // setting rainbow player animation
+    this.anims.create({
+      key: "run2",
       frames: this.anims.generateFrameNumbers("player", {
-          start: 0,
-          end: 1
+          start: 4,
+          end: 9
       }),
       frameRate: 8,
       repeat: -1
-    });
+  });
 
     // setting shark animation
     this.anims.create({
@@ -312,10 +326,11 @@ class playGame extends Phaser.Scene{
     this.floor.create(360, 720,'floorboundary')
     
     this.coral = this.physics.add.staticGroup();
-    //  Create coral
-    this.coral.create(701, 150, 'coral1');
-    this.coral.create(901, 250, 'coral2');
-    this.coral.create(501, 250, 'coral3');
+
+    //  Create inivisible shark platforms
+    this.sharkplatforms.create(800, 150, 'sharkplatform');
+    this.sharkplatforms.create(800, 450, 'sharkplatform');
+    this.sharkplatforms.create(400, 250, 'sharkplatform');
 
     // group with all active rocks.
     this.rocksGroup = this.add.group();
@@ -327,7 +342,8 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
-    
+    this.player.setCollideWorldBounds(true);
+    this.player.body.setImmovable(true);
 
     this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
@@ -384,8 +400,6 @@ class playGame extends Phaser.Scene{
         callbackScope: this,
         loop: true
     });
-    this.player.setBounce(1.5);
-    this.player.setCollideWorldBounds(true);
 
     // adding the shark;
     this.shark = this.physics.add.sprite(gameOptions.sharkStartPosition, 200, "shark");
@@ -479,6 +493,75 @@ class playGame extends Phaser.Scene{
       loop: true
     });
 
+    // create yellowcoral group
+    this.yellowcorals = this.physics.add.group()
+
+    //generate random yellowcoral
+    this.yellowcoralGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var yellowcoral = this.yellowcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'yellowcoral');
+          yellowcoral.setVelocityX(-100);
+          this.physics.add.collider(this.player, yellowcoral, (player, coral) => {
+            // var touching = player.body.wasTouching;
+            // if (touching.down) {
+            //   coral.body.velocity.y = 0;
+            //   coral.body.allowGravity = false;
+            //   coral.body.mass = 100;
+            // }
+            coral.body.velocity.x = -100;
+            coral.body.velocity.y = 0;
+          }, null, this);
+         }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create greencoral group
+    this.greencorals = this.physics.add.group()
+
+    //generate random greencoral
+    this.greencoralGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var greencoral = this.greencorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'greencoral');
+          greencoral.setVelocityX(-100);
+          this.physics.add.collider(this.player, greencoral, (player, coral) => {
+            coral.body.velocity.x = -100;
+            coral.body.velocity.y = 0;
+          }, null, this);
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create pinkcoral group
+    this.pinkcorals = this.physics.add.group()
+
+    //generate random pinkcoral
+    this.pinkcoralGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var pinkcoral = this.pinkcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'pinkcoral');
+          pinkcoral.setVelocityX(-100);
+          this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
+            coral.body.velocity.x = -100;
+            coral.body.velocity.y = 0;
+          }, null, this);
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
      //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
@@ -518,9 +601,10 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              
-              this.stars.killAndHide(jellyfish);
-              this.stars.remove(jellyfish);
+
+              this.jellyfishes.killAndHide(jellyfish);
+              this.jellyfishes.remove(jellyfish);
+              this.player.anims.play("run2")
 
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
@@ -530,14 +614,28 @@ class playGame extends Phaser.Scene{
           }
       });
 
+      var timer = this.time.addEvent({
+        delay: 5000,
+        callback: function(){
+          this.player.anims.play("run")
+        },
+      
+      callbackScope: this,
+      loop: false
+      });
+
     }, null, this);
 
     //  Setting collisions for trashbags
     this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+
+
+      trashbag.setTint(0xff0000);
       
       if (gameOptions.SFXmuted === false)  {
         obstacleHit.play()
       }
+
       this.tweens.add({
           targets: trashbag,
           y: trashbag.y - 100,
@@ -546,9 +644,10 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              
-              this.stars.killAndHide(trashbag);
-              this.stars.remove(trashbag);
+
+              this.trashbags.killAndHide(trashbag);
+              this.trashbags.remove(trashbag);
+
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
@@ -562,9 +661,14 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for trashbags
      this.physics.add.overlap(this.player, this.nets, function(player, net){
+
+
+      net.setTint(0xff0000);
+
       if (gameOptions.SFXmuted === false)  {
         obstacleHit.play()
       }
+
       this.tweens.add({
           targets: net,
           y: net.y - 100,
@@ -573,8 +677,8 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              this.stars.killAndHide(net);
-              this.stars.remove(net);
+              this.nets.killAndHide(net);
+              this.nets.remove(net);
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
