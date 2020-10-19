@@ -451,7 +451,7 @@ class playGame extends Phaser.Scene{
       delay: 1000,
       callback: function(){
         var spawnChance = Math.random();
-        if (spawnChance <= 0.5) {
+        if (spawnChance <= 0.25) {
           var jellyfish = this.jellyfishes.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'jellyfish');
           jellyfish.setVelocityX(-400);
           jellyfish.anims.play("jellyfishpulse");
@@ -607,14 +607,18 @@ class playGame extends Phaser.Scene{
             }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
-              this.player.anims.play("run2")
+              this.player.anims.play("run2");
+              this.trashcollider.active = false;
+              this.netcollider.active = false;
           }
       });
 
       var timer = this.time.addEvent({
         delay: 5000,
         callback: function(){
-          this.player.anims.play("run")
+          this.player.anims.play("run");
+          this.trashcollider.active = true;
+          this.netcollider.active = true;
         },
       
       callbackScope: this,
@@ -624,7 +628,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
     //  Setting collisions for trashbags
-    this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+    this.trashcollider = this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
 
 
       trashbag.setTint(0xff0000);
@@ -650,7 +654,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
      //  Setting collisions for nets
-     this.physics.add.overlap(this.player, this.nets, function(player, net){
+     this.netcollider = this.physics.add.overlap(this.player, this.nets, function(player, net){
       net.setTint(0xff0000);
 
       if (gameOptions.SFXmuted === false)  {
