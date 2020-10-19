@@ -3,7 +3,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 1,
+    initialTime: 60,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -700,8 +700,9 @@ class playGame extends Phaser.Scene{
   }
 
   checkForGameOver() {
-    if(this.timeLeft === 0){
-      this.scene.start("EndScreen")
+    if(this.timeLeft <= 0){
+      this.bgmusic.stop();
+      this.scene.start("EndScreen");
     }
   }
 
