@@ -84,7 +84,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene],
+        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene, howToPlay],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -114,9 +114,12 @@ class loadScene extends Phaser.Scene{
   }
   preload () {
     this.load.image('sea', './assets/sea-background.jpg');
-    this.load.image('loading', './assets/loading.png');
+    this.load.image("turtleStart", "./assets/turtle-loading.png");
+
+    
   }
   create () {
+
     this.scene.start("PreloadGame");
   } 
 };
@@ -129,11 +132,9 @@ class preloadGame extends Phaser.Scene{
   preload(){
 
     this.add.image(640, 360, 'sea')
-    this.add.image(640, 360, 'loading')
+    this.add.image(640, 360, 'turtleStart')
     
-    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
-    
-
+    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);
 
     this.load.image('sea', './assets/sea-background.jpg');
     this.load.image('floorboundary', './assets/floorboundary.png');
@@ -164,9 +165,13 @@ class preloadGame extends Phaser.Scene{
     this.load.image('mute', './assets/mute-white.png');
 
     //buttons
-    this.load.image('playButton', './assets/play-button.png');
-    this.load.image('playAgain', './assets/play-again.png');
-    this.load.image('submitScore', './assets/submit-score.png');
+    this.load.image('playButton', './assets/start-btn.png');
+    this.load.image('howtoplayButton', './assets/how-to-play-btn.png');
+    this.load.image('playAgain', './assets/play-again-btn.png');
+    this.load.image('submitScore', './assets/submit-score-btn.png');
+
+    // game logo
+    this.load.image('logo', './assets/turtle-dash-logo.png');
 
     // player is a sprite sheet made
 
@@ -207,10 +212,10 @@ class preloadGame extends Phaser.Scene{
     });
 
     // the animated turtle is a sprite sheet made by 800 x 600 pixels
-    this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
-      frameWidth: 800,
-      frameHeight: 600
-    });
+    // this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
+    //   frameWidth: 800,
+    //   frameHeight: 600
+    // });
 
 }
 
@@ -301,15 +306,15 @@ class preloadGame extends Phaser.Scene{
 
 
     
-    this.anims.create({
-      key: "turtleGif",
-      frames: this.anims.generateFrameNumbers("turtleStart", {
-        start: 0,
-        end: 145
-      }),
-      frameRate: 20,
-      repeat: -1
-    });
+    // this.anims.create({
+    //   key: "turtleGif",
+    //   frames: this.anims.generateFrameNumbers("turtleStart", {
+    //     start: 0,
+    //     end: 145
+    //   }),
+    //   frameRate: 20,
+    //   repeat: -1
+    // });
 
   this.scene.start("StartMenu");
     
@@ -715,8 +720,9 @@ class playGame extends Phaser.Scene{
   }
 
   checkForGameOver() {
-    if(this.timeLeft === 0){
-      this.scene.start("EndScreen")
+    if(this.timeLeft <= 0){
+      this.bgmusic.stop();
+      this.scene.start("EndScreen");
     }
   }
 
