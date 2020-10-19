@@ -438,6 +438,7 @@ class playGame extends Phaser.Scene{
         var star = this.stars.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'star');
         star.setVelocityX(-200);
         star.anims.play("starpulse");
+        star.setDepth(2);
       },
       callbackScope: this,
       loop: true
@@ -455,6 +456,7 @@ class playGame extends Phaser.Scene{
           var jellyfish = this.jellyfishes.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'jellyfish');
           jellyfish.setVelocityX(-400);
           jellyfish.anims.play("jellyfishpulse");
+          jellyfish.setDepth(2);
         }
       },
       callbackScope: this,
@@ -473,6 +475,7 @@ class playGame extends Phaser.Scene{
           var trashbag = this.trashbags.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'trashbag');
           trashbag.setVelocityX(-100);
           trashbag.anims.play("trashbagpulse");
+          trashbag.setDepth(2);
         }
       },
       callbackScope: this,
@@ -491,6 +494,7 @@ class playGame extends Phaser.Scene{
           var net = this.nets.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'net');
           net.setVelocityX(-100);
           net.anims.play("netpulse");
+          net.setDepth(2);
         }
       },
       callbackScope: this,
@@ -517,6 +521,7 @@ class playGame extends Phaser.Scene{
             // }
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
          }
       },
@@ -538,6 +543,7 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, greencoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
         }
       },
@@ -559,6 +565,7 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
         }
       },
