@@ -22,8 +22,8 @@ class scoreScene extends Phaser.Scene {
         for(var i = 0; i < gameOptions.scores.length && i < 5; i++) { 
             var nameToDisplay = gameOptions.scores[i].name
             var scoreToDisplay = gameOptions.scores[i].score
-            this.add.text(450, height, nameToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
-            this.add.text(700, height, scoreToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
+            this.add.text(500, height, nameToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
+            this.add.text(750, height, scoreToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
             height += 50;
         }
         
