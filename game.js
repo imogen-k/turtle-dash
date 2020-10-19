@@ -551,10 +551,11 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              
               this.stars.killAndHide(star);
               this.stars.remove(star);
-              this.timeLeft += 1
+              if(this.timeLeft <= 60) {
+                this.timeLeft += 1 
+              }
           }
         });
        }, null, this);
@@ -572,7 +573,9 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              this.timeLeft += 1;
+            if(this.timeLeft <= 60) {
+              this.timeLeft += 1 
+            }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
               this.player.anims.play("run2")
@@ -619,8 +622,6 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for nets
      this.physics.add.overlap(this.player, this.nets, function(player, net){
-
-
       net.setTint(0xff0000);
 
       if (gameOptions.SFXmuted === false)  {
@@ -689,10 +690,8 @@ class playGame extends Phaser.Scene{
 
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
-    if(percentageOfTimeLeft < 1) {
-      this.energyBar.setSize(210, 10)
-      this.energyBar.setScale(percentageOfTimeLeft,1)
-    }
+    console.log(percentageOfTimeLeft)
+    this.energyBar.setScale(percentageOfTimeLeft, 1)
   }
 
   checkForGameOver() {
