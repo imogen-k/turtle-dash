@@ -5,7 +5,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 60,
+    initialTime: 120,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -53,10 +53,14 @@ let gameOptions = {
     // % of probability a fire appears on the platform
     firePercent: 25,
 
+
     // sfx muted
     SFXmuted: false,
 
-    musicMuted: false
+    musicMuted: false,
+
+    scores: []
+
 }
 
 window.onload = function() {
@@ -80,7 +84,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [preloadGame, playGame],
+        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -92,17 +96,43 @@ window.onload = function() {
           //     },
           //     debug: false
           // }
-      },
+      }, 
+      
+      
+      dom: {
+        createContainer: true
+    },
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
+    
 }
+
+class loadScene extends Phaser.Scene{
+  constructor(){
+      super("LoadScene");
+  }
+  preload () {
+    this.load.image('sea', './assets/sea-background.jpg');
+    this.load.image('loading', './assets/loading.png');
+  }
+  create () {
+    this.scene.start("PreloadGame");
+  } 
+};
 
 class preloadGame extends Phaser.Scene{
   constructor(){
       super("PreloadGame");
   }
   preload(){
+
+    this.add.image(640, 360, 'sea')
+    this.add.image(640, 360, 'loading')
+    
+    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
+    
+
 
     this.load.image('sea', './assets/sea-background.jpg');
 
@@ -124,10 +154,17 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
 
+
     // mute buttons
     this.load.image('mute', './assets/mute-white.png');
 
-    // shark is a sprite sheet made
+
+    //buttons
+    this.load.image('playButton', './assets/play-button.png');
+    this.load.image('playAgain', './assets/play-again.png');
+    this.load.image('submitScore', './assets/submit-score.png');
+
+    // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
@@ -151,6 +188,12 @@ class preloadGame extends Phaser.Scene{
       frameHeight: 50
   });
 
+    // the animated turtle is a sprite sheet made by 800 x 600 pixels
+    this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
+      frameWidth: 800,
+      frameHeight: 600
+  });
+
   // the jellyfish is a sprite sheet made by 50x50 pixels
   this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
     frameWidth: 50,
@@ -172,7 +215,7 @@ class preloadGame extends Phaser.Scene{
 
   });
 
-  }
+}
 
   create(){
 
@@ -211,6 +254,17 @@ class preloadGame extends Phaser.Scene{
       repeat: -1
   });
 
+
+  this.anims.create({
+    key: "turtleGif",
+    frames: this.anims.generateFrameNumbers("turtleStart", {
+        start: 0,
+        end: 145
+    }),
+    frameRate: 20,
+    repeat: -1
+  });
+
   // setting jellyfish animation
   this.anims.create({
     key: "jellyfishpulse",
@@ -247,10 +301,11 @@ this.anims.create({
   repeat: -1
 });
 
-
-    this.scene.start("PlayGame");
+this.scene.start("StartMenu");
+    
   }
 }
+
 
 // playGame scene
 class playGame extends Phaser.Scene{
@@ -321,6 +376,7 @@ class playGame extends Phaser.Scene{
 
     energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
 
+
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -333,12 +389,14 @@ class playGame extends Phaser.Scene{
           // } else {
             this.timeLeft --;
           // }
-
+          
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
             if(this.timeLeft === 60){
-                this.scene.start("PlayGame")
+                bgmusic.stop()
+                this.scene.start("EndScreen")
+
             }
         },
         callbackScope: this,
