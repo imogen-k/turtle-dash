@@ -98,16 +98,16 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
-    
+
     this.load.image('sea', './assets/sea-background.jpg');
-    this.load.image('floorboundary', './assets/floorboundary.png')
+    this.load.image('floorboundary', './assets/floorboundary.png');
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
     
-    this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
-    this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
-    this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
-    this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
+    this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"]);
+    this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3");
+    this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3");
+    this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3");
 
 
     // coral
@@ -246,7 +246,7 @@ class playGame extends Phaser.Scene{
     this.add.image(640, 360, 'sea')
 
     this.floor = this.physics.add.staticGroup();
-    this.floor.create(gameOptions.playerStartPosition, 720,'floorboundary')
+    this.floor.create(360, 720,'floorboundary')
     
     this.coral = this.physics.add.staticGroup();
     //  Create coral
@@ -265,7 +265,7 @@ class playGame extends Phaser.Scene{
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
 
-    this.physics.add.overlap(this.player, this.floor,this.scene.start("PlayGame"),null,this)
+    this.physics.add.overlap(this.player,this.floor,console.log('floorhit'),null,this)
 
     // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
