@@ -112,9 +112,12 @@ class loadScene extends Phaser.Scene{
   }
   preload () {
     this.load.image('sea', './assets/sea-background.jpg');
-    this.load.image('loading', './assets/loading.png');
+    this.load.image("turtleStart", "./assets/turtle-loading.png");
+
+    
   }
   create () {
+
     this.scene.start("PreloadGame");
   } 
 };
@@ -127,11 +130,9 @@ class preloadGame extends Phaser.Scene{
   preload(){
 
     this.add.image(640, 360, 'sea')
-    this.add.image(640, 360, 'loading')
+    this.add.image(640, 360, 'turtleStart')
     
-    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
-    
-
+    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);
 
     this.load.image('sea', './assets/sea-background.jpg');
     this.load.image('floorboundary', './assets/floorboundary.png');
@@ -209,10 +210,10 @@ class preloadGame extends Phaser.Scene{
     });
 
     // the animated turtle is a sprite sheet made by 800 x 600 pixels
-    this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
-      frameWidth: 800,
-      frameHeight: 600
-    });
+    // this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
+    //   frameWidth: 800,
+    //   frameHeight: 600
+    // });
 
 }
 
@@ -303,15 +304,15 @@ class preloadGame extends Phaser.Scene{
 
 
     
-    this.anims.create({
-      key: "turtleGif",
-      frames: this.anims.generateFrameNumbers("turtleStart", {
-        start: 0,
-        end: 145
-      }),
-      frameRate: 20,
-      repeat: -1
-    });
+    // this.anims.create({
+    //   key: "turtleGif",
+    //   frames: this.anims.generateFrameNumbers("turtleStart", {
+    //     start: 0,
+    //     end: 145
+    //   }),
+    //   frameRate: 20,
+    //   repeat: -1
+    // });
 
   this.scene.start("StartMenu");
     
