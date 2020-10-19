@@ -28,7 +28,7 @@ class scoreScene extends Phaser.Scene {
         }
         
 
-        var again = this.add.image(640, 600, 'playAgain')
+        var again = this.add.image(640, 580, 'playAgain')
   
         again.setInteractive();
   

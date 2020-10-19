@@ -9,13 +9,12 @@ class endScreen extends Phaser.Scene {
 
       
       this.add.image(640, 360, 'sea')
-  
+      this.add.image(680, 170, 'turtlesad')
+      this.add.text(450, 220, 'GAME OVER', { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
+      this.add.text(450, 320, 'SCORE: ' + gameOptions.lastScore, { fontFamily: 'bubble_bobbleregular', fontSize: '80px' })
+      this.add.text(450, 420, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
       
-
-      this.add.text(450, 170, 'SCORE: ' + gameOptions.lastScore, { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
-      this.add.text(450, 300, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
-      
-    this.inputText = this.add.rexInputText(770, 372, {
+    this.inputText = this.add.rexInputText(770, 492, {
         type: 'textarea',
         text: '<your name>',
         color: '#78758d',
@@ -40,7 +39,7 @@ class endScreen extends Phaser.Scene {
         })
 
 
-        var scores = this.add.image(550, 450, 'submitScore')
+        var scores = this.add.image(550, 530, 'submitScore')
 
 
         scores.setInteractive();
@@ -51,7 +50,7 @@ class endScreen extends Phaser.Scene {
 
 
     
-      var again = this.add.image(770, 452, 'playAgain')
+      var again = this.add.image(770, 532, 'playAgain')
 
       again.setInteractive();
 

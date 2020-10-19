@@ -3,7 +3,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 60,
+    initialTime: 1,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -172,6 +172,9 @@ class preloadGame extends Phaser.Scene{
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
+
+    // sad turtle
+    this.load.image('turtlesad', './assets/turtle-sad.png');
 
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
