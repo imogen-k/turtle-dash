@@ -43,7 +43,7 @@ class endScreen extends Phaser.Scene {
 
         scores.setInteractive();
         scores.on('pointerdown', () => {
-        gameOptions.scores.push(this.inputText.text)
+        gameOptions.scores.push({name: this.inputText.text, score: gameOptions.lastScore})
           this.scene.start("ScoreScene");
         })
 

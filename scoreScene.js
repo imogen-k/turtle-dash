@@ -16,6 +16,9 @@ class scoreScene extends Phaser.Scene {
         
         this.add.text(450, 260, gameOptions.scores, { fontFamily: 'Helvetica Neue', fontSize: '20px' })
 
+        console.log('showing gameOptions.scores')
+        console.log(gameOptions.scores)
+
   
         var again = this.add.image(640, 500, 'playAgain')
   
