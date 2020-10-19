@@ -64,6 +64,7 @@
     "web audio"
   ],
   "devDependencies": {
+    "@azerion/phaser-input": "^2.0.5",
     "@types/source-map": "^0.5.7",
     "clean-webpack-plugin": "^3.0.0",
     "dts-dom": "^3.6.0",
