@@ -265,7 +265,7 @@ class playGame extends Phaser.Scene{
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
 
-    this.physics.add.overlap(this.player,this.floor,console.log('floorhit'),null,this)
+    this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
