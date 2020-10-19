@@ -1,8 +1,9 @@
+//const { createBuilderStatusReporter } = require("typescript");
+
 let game;
 
 // global game options
 let gameOptions = {
-  
 
     initialTime: 120,
 
@@ -69,7 +70,7 @@ window.onload = function() {
         },
         audio: {
             mute: false,
-            volume: 20,
+            volume: 5,
             rate: 1,
             detune: 0,
             seek: 0,
@@ -118,11 +119,13 @@ class preloadGame extends Phaser.Scene{
       super("PreloadGame");
   }
   preload(){
+
     this.add.image(640, 360, 'sea')
     this.add.image(640, 360, 'loading')
     
     this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
     
+
 
     this.load.image('sea', './assets/sea-background.jpg');
 
@@ -144,18 +147,21 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
 
+
     //buttons
     this.load.image('playButton', './assets/play-button.png');
     this.load.image('playAgain', './assets/play-again.png');
     this.load.image('submitScore', './assets/submit-score.png');
 
     // shark is a sprite sheet made 
+
+
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
    });
 
-    // player is a sprite sheet made 
+    // player is a sprite sheet made
     this.load.spritesheet("player", "./assets/turtle.png", {
         frameWidth: 72,
         frameHeight: 55
@@ -167,19 +173,43 @@ class preloadGame extends Phaser.Scene{
       frameHeight: 512
   });
 
-    // the star is a sprite sheet made by 20x20 pixels
-    this.load.spritesheet("star", "star.png", {
+    // the star is a sprite sheet made by 50x50 pixels
+    this.load.spritesheet("star", "./assets/star.png", {
       frameWidth: 50,
       frameHeight: 50
   });
+
     // the animated turtle is a sprite sheet made by 800 x 600 pixels
     this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
       frameWidth: 800,
       frameHeight: 600
   });
+
+  // the jellyfish is a sprite sheet made by 50x50 pixels
+  this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
+    frameWidth: 50,
+    frameHeight: 50
+
+  });
+
+  // the jellyfish is a sprite sheet made by 100x100 pixels
+  this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+    frameWidth: 100,
+    frameHeight: 100
+
+  });
+
+  // the net is a sprite sheet made by 50x50 pixels
+  this.load.spritesheet("net", "./assets/net.png", {
+    frameWidth: 100,
+    frameHeight: 100
+
+  });
+
 }
 
   create(){
+
 
     // setting player animation
     this.anims.create({
@@ -205,15 +235,16 @@ class preloadGame extends Phaser.Scene{
 
     // setting star animation
     this.anims.create({
-      key: "rotate",
+      key: "starpulse",
       frames: this.anims.generateFrameNumbers("star", {
           start: 0,
           end: 5
       }),
-      frameRate: 15,
+      frameRate: 8,
       yoyo: true,
       repeat: -1
   });
+
 
   this.anims.create({
     key: "turtleGif",
@@ -225,9 +256,47 @@ class preloadGame extends Phaser.Scene{
     repeat: -1
   });
 
-    this.scene.start("StartMenu");
- }
+  // setting jellyfish animation
+  this.anims.create({
+    key: "jellyfishpulse",
+    frames: this.anims.generateFrameNumbers("jellyfish", {
+        start: 0,
+        end: 5
+    }),
+    frameRate: 8,
+    yoyo: true,
+    repeat: -1
+});
+
+// setting trashbag animation
+this.anims.create({
+  key: "trashbagpulse",
+  frames: this.anims.generateFrameNumbers("trashbag", {
+      start: 0,
+      end: 5
+  }),
+  frameRate: 8,
+  yoyo: true,
+  repeat: -1
+});
+
+// setting net animation
+this.anims.create({
+  key: "netpulse",
+  frames: this.anims.generateFrameNumbers("net", {
+      start: 0,
+      end: 5
+  }),
+  frameRate: 8,
+  yoyo: true,
+  repeat: -1
+});
+
+this.scene.start("StartMenu");
+    
+  }
 }
+
 
 // playGame scene
 class playGame extends Phaser.Scene{
@@ -270,27 +339,24 @@ class playGame extends Phaser.Scene{
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
 
-
-    this.timeLeft = gameOptions.initialTime;
-
+    // playing the background music
     var bgmusic = this.sound.add('backgroundmusic');
     bgmusic.play()
 
-    
+    // settiing the timer
+    this.timeLeft = gameOptions.initialTime;
+
     let energyContainer = this.add.sprite(1100, 45, "energycontainer");
 
-  
     let energyBar = this.add.sprite(energyContainer.x, energyContainer.y, "energybar");
 
-   
     this.energyMask = this.add.sprite(energyBar.x, energyBar.y, "energybar");
 
-  
     this.energyMask.visible = false;
 
     energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
 
-  
+
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -310,15 +376,12 @@ class playGame extends Phaser.Scene{
             if(this.timeLeft === 60){
                 bgmusic.stop()
                 this.scene.start("EndScreen")
+
             }
         },
         callbackScope: this,
         loop: true
     });
-
-
-
-
     this.player.setBounce(1.5);
     this.player.setCollideWorldBounds(true);
 
@@ -344,27 +407,180 @@ class playGame extends Phaser.Scene{
     this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.framesMoveUp = 0;
     this.player.body.allowGravity = false;
-   
 
-    // group with all active stars.
-    this.starGroup = this.add.group({
+    // create star group
+    this.stars = this.physics.add.group()
 
-      // once a star is removed, it's added to the pool
-      removeCallback: function(star){
-          star.scene.coinPool.add(star)
-      }
-  });
+    //generate random stars
+    this.starGenerator = this.time.addEvent({
+      delay: 1000,
+      callback: function(){
+        var star = this.stars.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'star');
+        star.setVelocityX(-200);
+        star.anims.play("starpulse");
+      },
+      callbackScope: this,
+      loop: true
+    });
 
-    // star pool
-    this.starPool = this.add.group({
+    // create jellyfish group
+    this.jellyfishes = this.physics.add.group()
 
-      // once a star is removed from the pool, it's added to the active coins group
-      removeCallback: function(star){
-          star.scene.starGroup.add(star)
-      }
-  });
+    //generate random jellyfish
+    this.jellyfishGenerator = this.time.addEvent({
+      delay: 1000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.5) {
+          var jellyfish = this.jellyfishes.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'jellyfish');
+          jellyfish.setVelocityX(-400);
+          jellyfish.anims.play("jellyfishpulse");
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create trashbag group
+    this.trashbags = this.physics.add.group()
+
+    //generate random trashbag
+    this.trashbagGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var trashbag = this.trashbags.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'trashbag');
+          trashbag.setVelocityX(-100);
+          trashbag.anims.play("trashbagpulse");
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+    // create net group
+    this.nets = this.physics.add.group()
+
+    //generate random net
+    this.netGenerator = this.time.addEvent({
+      delay: 2000,
+      callback: function(){
+        var spawnChance = Math.random();
+        if (spawnChance <= 0.25) {
+          var net = this.nets.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'net');
+          net.setVelocityX(-100);
+          net.anims.play("netpulse");
+        }
+      },
+      callbackScope: this,
+      loop: true
+    });
+
+     //  Setting collisions for stars
+
+     this.physics.add.overlap(this.player, this.stars, function(player, star){
+
+      this.tweens.add({
+          targets: star,
+          y: star.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(star);
+              this.stars.remove(star);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+
+     //  Setting collisions for jellyfish
+     this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
+
+      this.tweens.add({
+          targets: jellyfish,
+          y: jellyfish.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(jellyfish);
+              this.stars.remove(jellyfish);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+
+    //  Setting collisions for trashbags
+    this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+
+      this.tweens.add({
+          targets: trashbag,
+          y: trashbag.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(trashbag);
+              this.stars.remove(trashbag);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+
+     //  Setting collisions for trashbags
+     this.physics.add.overlap(this.player, this.nets, function(player, net){
+
+      this.tweens.add({
+          targets: net,
+          y: net.y - 100,
+          alpha: 0,
+          duration: 800,
+          ease: "Cubic.easeOut",
+          callbackScope: this,
+          onComplete: function(){
+              this.stars.killAndHide(net);
+              this.stars.remove(net);
+              if(this.timeLeft > 60) {
+                this.timeLeft += 1;
+              }
+
+              let stepWidth = this.energyMask.width * gameOptions.initialTime;
+              this.energyMask.x += stepWidth;
+          }
+      });
+
+    }, null, this);
+  }
+
+  collectStar(player, star){
+    star.destroy();
+
 
   }
+
 
   // adding rocks
   addRocks(){
@@ -399,8 +615,8 @@ class playGame extends Phaser.Scene{
     //     startGame(game.scene.scenes[0])
 
     this.player.setVelocityY(-380)
-    this.player.angle = -20
-    this.framesMoveUp = 25
+    this.player.angle = 0
+    this.framesMoveUp = 15
 }
 
   update(){
@@ -424,19 +640,17 @@ class playGame extends Phaser.Scene{
     else {
         this.player.setVelocityY(100)
 
-        if (this.player.angle < 60)
+        if (this.player.angle < 50)
             this.player.angle += 1
     }
 
     this.physics.add.collider(this.shark, this.sharkplatforms);
     this.shark.body.setBounce(1);
 
-   
+
    // check if enemy's step counter has reach limit
-   this.shark.body.velocity.x = this.shark.factor * -50; 
+   this.shark.body.velocity.x = this.shark.factor * -50;
 
   }
 
-
-  
 }
