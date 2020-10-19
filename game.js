@@ -307,7 +307,7 @@ class playGame extends Phaser.Scene{
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
-            if(this.timeLeft === 115){
+            if(this.timeLeft === 60){
                 bgmusic.stop()
                 this.scene.start("EndScreen")
             }
