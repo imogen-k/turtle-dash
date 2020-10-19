@@ -3,7 +3,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 60,
+    initialTime: 1,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -82,7 +82,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene],
+        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene, howToPlay],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -162,9 +162,13 @@ class preloadGame extends Phaser.Scene{
     this.load.image('mute', './assets/mute-white.png');
 
     //buttons
-    this.load.image('playButton', './assets/play-button.png');
-    this.load.image('playAgain', './assets/play-again.png');
-    this.load.image('submitScore', './assets/submit-score.png');
+    this.load.image('playButton', './assets/start-btn.png');
+    this.load.image('howtoplayButton', './assets/how-to-play-btn.png');
+    this.load.image('playAgain', './assets/play-again-btn.png');
+    this.load.image('submitScore', './assets/submit-score-btn.png');
+
+    // game logo
+    this.load.image('logo', './assets/turtle-dash-logo.png');
 
     // player is a sprite sheet made
 
