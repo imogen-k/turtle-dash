@@ -3,7 +3,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 60,
+    initialTime: 5,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -711,7 +711,6 @@ class playGame extends Phaser.Scene{
 
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
-    console.log(percentageOfTimeLeft)
     this.energyBar.setScale(percentageOfTimeLeft, 1)
   }
 

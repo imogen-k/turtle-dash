@@ -14,12 +14,18 @@ class scoreScene extends Phaser.Scene {
 
         this.add.text(700, 220, 'Score:', { fontFamily: 'Helvetica Neue', fontSize: '20px' })
         
-        this.add.text(450, 260, gameOptions.scores, { fontFamily: 'Helvetica Neue', fontSize: '20px' })
+        var height = 270
 
-        console.log('showing gameOptions.scores')
-        console.log(gameOptions.scores)
+        for(var i = 0; i < gameOptions.scores.length || i === 5; i++) { 
+            console.log(gameOptions.scores[i].score)   
+            var nameToDisplay = gameOptions.scores[i].name
+            var scoreToDisplay = gameOptions.scores[i].score
+            this.add.text(450, height, nameToDisplay, { fontFamily: 'Helvetica Neue', fontSize: '20px' })
+            this.add.text(700, height, scoreToDisplay, { fontFamily: 'Helvetica Neue', fontSize: '20px' })
+            height += 50;
+        }
+        
 
-  
         var again = this.add.image(640, 500, 'playAgain')
   
         again.setInteractive();
