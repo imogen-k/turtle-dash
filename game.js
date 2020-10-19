@@ -124,7 +124,7 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
-    this.load.image('sea', './assets/sea-background.jpg');
+    this.load.image('sea', '/assets/sea-background.jpg');
 
     // player is a sprite sheet made by 24x48 pixels
     this.load.spritesheet("player", "./assets/side.png", {
