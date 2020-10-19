@@ -53,7 +53,14 @@ let gameOptions = {
     // % of probability a fire appears on the platform
     firePercent: 25,
 
+
+    // sfx muted
+    SFXmuted: false,
+
+    musicMuted: false,
+
     scores: []
+
 }
 
 window.onload = function() {
@@ -132,9 +139,9 @@ class preloadGame extends Phaser.Scene{
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
-    this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3")
-    this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3")
-    this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
+    this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
+    this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
+    this.load.audio("collect-star", "./assets/zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
 
     // invisible shark platform
     this.load.image('sharkplatform', './assets/invisible-shark-platform.png');
@@ -148,14 +155,16 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral3', './assets/coral3.png');
 
 
+    // mute buttons
+    this.load.image('mute', './assets/mute-white.png');
+
+
     //buttons
     this.load.image('playButton', './assets/play-button.png');
     this.load.image('playAgain', './assets/play-again.png');
     this.load.image('submitScore', './assets/submit-score.png');
 
     // shark is a sprite sheet made 
-
-
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
@@ -338,10 +347,21 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+    
 
     // playing the background music
-    var bgmusic = this.sound.add('backgroundmusic');
-    bgmusic.play()
+    this.bgmusic = this.sound.add('backgroundmusic');
+    this.bgmusic.play()
+
+    // muting background music
+    this.muteMusic = this.add.text(60, 40, 'Music off')
+  
+    this.muteSFX = this.add.text(200, 40, 'SFX off')
+
+    // adding sound effects
+    var starCollected = this.sound.add("collect-star");
+    var obstacleHit = this.sound.add("obstaclehit");
+    var jellymodesound = this.sound.add("jellymode");
 
     // settiing the timer
     this.timeLeft = gameOptions.initialTime;
@@ -480,7 +500,9 @@ class playGame extends Phaser.Scene{
      //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
-
+      if (gameOptions.SFXmuted === false) {
+        starCollected.play()
+      }
       this.tweens.add({
           targets: star,
           y: star.y - 100,
@@ -489,6 +511,7 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(star);
               this.stars.remove(star);
               if(this.timeLeft > 60) {
@@ -504,7 +527,11 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for jellyfish
      this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
-
+        
+      if (gameOptions.SFXmuted === false) {
+        jellymodesound.play()
+      }
+      
       this.tweens.add({
           targets: jellyfish,
           y: jellyfish.y - 100,
@@ -513,8 +540,10 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(jellyfish);
               this.stars.remove(jellyfish);
+
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
@@ -528,7 +557,10 @@ class playGame extends Phaser.Scene{
 
     //  Setting collisions for trashbags
     this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
-
+      
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: trashbag,
           y: trashbag.y - 100,
@@ -537,6 +569,7 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(trashbag);
               this.stars.remove(trashbag);
               if(this.timeLeft > 60) {
@@ -552,7 +585,9 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for trashbags
      this.physics.add.overlap(this.player, this.nets, function(player, net){
-
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: net,
           y: net.y - 100,
@@ -578,7 +613,6 @@ class playGame extends Phaser.Scene{
   collectStar(player, star){
     star.destroy();
 
-
   }
 
 
@@ -596,6 +630,7 @@ class playGame extends Phaser.Scene{
         rock.setFrame(Phaser.Math.Between(0, 3))
         this.addRocks()
     }
+
 }
 
   // getting rightmost rock x position
@@ -617,9 +652,47 @@ class playGame extends Phaser.Scene{
     this.player.setVelocityY(-380)
     this.player.angle = 0
     this.framesMoveUp = 15
+
+    
 }
 
   update(){
+
+    if (gameOptions.SFXmuted === false) {
+      this.muteSFX.setText("SFX off")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = true
+        });
+    }
+
+    if (gameOptions.SFXmuted === true) {
+      this.muteSFX.setText("SFX on")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = false
+        });
+    }
+
+
+    if (gameOptions.musicMuted === false) {
+      this.muteMusic.setText("Music off")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.stop()
+        gameOptions.musicMuted = true
+      });
+    }
+
+    if (gameOptions.musicMuted === true) {
+      this.muteMusic.setText("Music on")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.play()
+          gameOptions.musicMuted = false
+        });
+    }
+
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
       if(rock.x < - rock.displayWidth){
