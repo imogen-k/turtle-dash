@@ -203,7 +203,6 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 100,
       frameHeight: 100
     });
-    }
 
     // the animated turtle is a sprite sheet made by 800 x 600 pixels
     this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
