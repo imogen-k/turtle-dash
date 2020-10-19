@@ -54,7 +54,9 @@ let gameOptions = {
     firePercent: 25,
 
     // sfx muted
-    SFXmuted: false
+    SFXmuted: false,
+
+    musicMuted: false
 }
 
 window.onload = function() {
@@ -293,42 +295,13 @@ class playGame extends Phaser.Scene{
     
 
     // playing the background music
-    var bgmusic = this.sound.add('backgroundmusic');
-    bgmusic.play()
+    this.bgmusic = this.sound.add('backgroundmusic');
+    this.bgmusic.play()
 
     // muting background music
-    var muteMusic = this.add.text(60, 40, 'Music off')
-    muteMusic.setInteractive();
-
-    muteMusic.on('pointerdown', () => {
-      bgmusic.stop()
-      muteMusic.destroy()
-      var unmuteMusic  = this.add.text(60, 40, 'Music on')
-      unmuteMusic.setInteractive()
-      unmuteMusic.on('pointerdown', () => {
-        bgmusic.play()
-        unmuteMusic.destroy()
-        var muteMusic  = this.add.text(60, 40, 'Music off')
-      });
-    });
-    
-
-    // muting sound effects
-    if (gameOptions.SFXmuted === false) {
-      var muteSFX = this.add.text(200, 40, 'SFX off')
-      muteSFX.setInteractive();
-      muteSFX.on('pointerdown', () => {
-          gameOptions.SFXmuted = true
-        });
-    }
-
-    if (gameOptions.SFXmuted === true) {
-      var unmuteSFX = this.add.text(200, 40, 'SFX on')
-      unmuteSFX.setInteractive();
-      unmuteSFX.on('pointerdown', () => {
-          gameOptions.SFXmuted = false
-        });
-    }
+    this.muteMusic = this.add.text(60, 40, 'Music off')
+  
+    this.muteSFX = this.add.text(200, 40, 'SFX off')
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
@@ -599,6 +572,7 @@ class playGame extends Phaser.Scene{
         rock.setFrame(Phaser.Math.Between(0, 3))
         this.addRocks()
     }
+
 }
 
   // getting rightmost rock x position
@@ -620,9 +594,47 @@ class playGame extends Phaser.Scene{
     this.player.setVelocityY(-380)
     this.player.angle = 0
     this.framesMoveUp = 15
+
+    
 }
 
   update(){
+
+    if (gameOptions.SFXmuted === false) {
+      this.muteSFX.setText("SFX off")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = true
+        });
+    }
+
+    if (gameOptions.SFXmuted === true) {
+      this.muteSFX.setText("SFX on")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = false
+        });
+    }
+
+
+    if (gameOptions.musicMuted === false) {
+      this.muteMusic.setText("Music off")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.stop()
+        gameOptions.musicMuted = true
+      });
+    }
+
+    if (gameOptions.musicMuted === true) {
+      this.muteMusic.setText("Music on")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.play()
+          gameOptions.musicMuted = false
+        });
+    }
+
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
       if(rock.x < - rock.displayWidth){
