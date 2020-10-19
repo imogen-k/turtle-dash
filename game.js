@@ -3,7 +3,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 5,
+    initialTime: 60,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],

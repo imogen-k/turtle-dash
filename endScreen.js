@@ -38,7 +38,6 @@ class endScreen extends Phaser.Scene {
         })
 
 
-
         var scores = this.add.image(500, 500, 'submitScore')
 
         scores.setInteractive();
@@ -48,17 +47,12 @@ class endScreen extends Phaser.Scene {
         })
 
     
-
-      
-
-
-
       var again = this.add.image(800, 500, 'playAgain')
 
       again.setInteractive();
 
       again.on('pointerdown', () => { 
-     
+      gameOptions.lastScore = 0;
       this.scene.start("PlayGame");
   
   });
