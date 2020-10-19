@@ -159,7 +159,8 @@ class preloadGame extends Phaser.Scene{
 
 
     // mute buttons
-    this.load.image('mute', './assets/mute-white.png');
+    this.load.image('soundOn', './assets/sound-on.png');
+    this.load.image('soundOff', './assets/sound-off.png');
 
     //buttons
     this.load.image('playButton', './assets/play-button.png');
@@ -696,6 +697,7 @@ class playGame extends Phaser.Scene{
 
   checkForGameOver() {
     if(this.timeLeft === 0){
+      this.bgmusic.stop()
       this.scene.start("EndScreen")
     }
   }
@@ -725,7 +727,8 @@ class playGame extends Phaser.Scene{
 
 
     if (gameOptions.musicMuted === false) {
-      this.muteMusic.setText("Music off")
+      this.muteMusic.setText("Music")
+      this.image.add( 100, 100, 'sound-off')
       this.muteMusic.setInteractive()
       this.muteMusic.on('pointerdown', () => {
         this.bgmusic.stop()
@@ -734,7 +737,8 @@ class playGame extends Phaser.Scene{
     }
 
     if (gameOptions.musicMuted === true) {
-      this.muteMusic.setText("Music on")
+      this.muteMusic.setText("Music")
+      this.image.add( 100, 100, 'sound-on')
       this.muteMusic.setInteractive()
       this.muteMusic.on('pointerdown', () => {
         this.bgmusic.play()
