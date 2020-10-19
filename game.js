@@ -5,7 +5,7 @@ let game;
 // global game options
 let gameOptions = {
 
-    initialTime: 60,
+    initialTime: 120,
 
     // platform speed range, in pixels per second
     platformSpeedRange: [300, 300],
@@ -51,7 +51,16 @@ let gameOptions = {
     starPercent: 25,
 
     // % of probability a fire appears on the platform
-    firePercent: 25
+    firePercent: 25,
+
+
+    // sfx muted
+    SFXmuted: false,
+
+    musicMuted: false,
+
+    scores: []
+
 }
 
 window.onload = function() {
@@ -75,7 +84,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [preloadGame, playGame],
+        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene],
         //backgroundColor: 0x0c88c7,
 
         // physics settings
@@ -87,11 +96,30 @@ window.onload = function() {
           //     },
           //     debug: false
           // }
-      },
+      }, 
+      
+      
+      dom: {
+        createContainer: true
+    },
     }
     game = new Phaser.Game(gameConfig);
     window.focus();
+    
 }
+
+class loadScene extends Phaser.Scene{
+  constructor(){
+      super("LoadScene");
+  }
+  preload () {
+    this.load.image('sea', './assets/sea-background.jpg');
+    this.load.image('loading', './assets/loading.png');
+  }
+  create () {
+    this.scene.start("PreloadGame");
+  } 
+};
 
 class preloadGame extends Phaser.Scene{
   constructor(){
@@ -99,15 +127,22 @@ class preloadGame extends Phaser.Scene{
   }
   preload(){
 
+    this.add.image(640, 360, 'sea')
+    this.add.image(640, 360, 'loading')
+    
+    this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);    
+    
+
+
     this.load.image('sea', './assets/sea-background.jpg');
     this.load.image('floorboundary', './assets/floorboundary.png');
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
-    
-    this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"]);
-    this.load.audio("jellymode", "zapsplat_cartoon_magic_ascend_spell.mp3");
-    this.load.audio("hit-obstacle", "zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3");
-    this.load.audio("collect-star", "zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3");
+
+    this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
+    this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
+    this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
+    this.load.audio("collect-star", "./assets/zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
 
 
     // coral
@@ -115,7 +150,17 @@ class preloadGame extends Phaser.Scene{
     this.load.image('coral2', './assets/coral2.png');
     this.load.image('coral3', './assets/coral3.png');
 
-    // shark is a sprite sheet made
+
+    // mute buttons
+    this.load.image('mute', './assets/mute-white.png');
+
+
+    //buttons
+    this.load.image('playButton', './assets/play-button.png');
+    this.load.image('playAgain', './assets/play-again.png');
+    this.load.image('submitScore', './assets/submit-score.png');
+
+    // shark is a sprite sheet made 
     this.load.spritesheet("shark", "./assets/shark2.png", {
       frameWidth: 124,
       frameHeight: 67
@@ -139,24 +184,30 @@ class preloadGame extends Phaser.Scene{
       frameHeight: 50
     });
 
-    // the jellyfish is a sprite sheet made by 50x50 pixels
-    this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
-      frameWidth: 50,
-      frameHeight: 50
+    // the animated turtle is a sprite sheet made by 800 x 600 pixels
+    this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
+      frameWidth: 800,
+      frameHeight: 600
     });
 
-    // the trash is a sprite sheet made by 100x100 pixels
-    this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+  // the jellyfish is a sprite sheet made by 50x50 pixels
+  this.load.spritesheet("jellyfish", "./assets/jellyfish.png", {
+    frameWidth: 50,
+    frameHeight: 50
+  });
+
+  // the trashbag is a sprite sheet made by 100x100 pixels
+  this.load.spritesheet("trashbag", "./assets/trashbag.png", {
+    frameWidth: 100,
+    frameHeight: 100
+  });
+
+   // the net is a sprite sheet made by 50x50 pixels
+   this.load.spritesheet("net", "./assets/net.png", {
       frameWidth: 100,
       frameHeight: 100
     });
-
-    // the net is a sprite sheet made by 50x50 pixels
-    this.load.spritesheet("net", "./assets/net.png", {
-      frameWidth: 100,
-      frameHeight: 100
-    });
-  }
+ }
 
   create(){
     
@@ -206,7 +257,7 @@ class preloadGame extends Phaser.Scene{
       yoyo: true,
       repeat: -1
     });
-
+    
     // setting trashbag animation
     this.anims.create({
       key: "trashbagpulse",
@@ -230,10 +281,22 @@ class preloadGame extends Phaser.Scene{
         yoyo: true,
         repeat: -1
       });
+    
+    this.anims.create({
+      key: "turtleGif",
+      frames: this.anims.generateFrameNumbers("turtleStart", {
+        start: 0,
+        end: 145
+      }),
+      frameRate: 20,
+      repeat: -1
+    });
 
-    this.scene.start("PlayGame");
+  this.scene.start("StartMenu");
+    
   }
 }
+
 
 // playGame scene
 class playGame extends Phaser.Scene{
@@ -264,12 +327,23 @@ class playGame extends Phaser.Scene{
     this.player = this.physics.add.sprite(gameOptions.playerStartPosition, game.config.height * 0.7, "player");
     this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
+    
 
     this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
-    var bgmusic = this.sound.add('backgroundmusic');
-    bgmusic.play()
+    this.bgmusic = this.sound.add('backgroundmusic');
+    this.bgmusic.play()
+
+    // muting background music
+    this.muteMusic = this.add.text(60, 40, 'Music off')
+  
+    this.muteSFX = this.add.text(200, 40, 'SFX off')
+
+    // adding sound effects
+    var starCollected = this.sound.add("collect-star");
+    var obstacleHit = this.sound.add("obstaclehit");
+    var jellymodesound = this.sound.add("jellymode");
 
     // settiing the timer
     this.timeLeft = gameOptions.initialTime;
@@ -284,6 +358,7 @@ class playGame extends Phaser.Scene{
 
     energyBar.mask = new Phaser.Display.Masks.BitmapMask(this, this.energyMask);
 
+
     this.gameTimer = this.time.addEvent({
         delay: 1000,
         callback: function(){
@@ -296,12 +371,14 @@ class playGame extends Phaser.Scene{
           // } else {
             this.timeLeft --;
           // }
-
+          
             let stepWidth = this.energyMask.displayWidth / gameOptions.initialTime;
 
             this.energyMask.x -= stepWidth;
             if(this.timeLeft === 60){
-                this.scene.start("PlayGame")
+                bgmusic.stop()
+                this.scene.start("EndScreen")
+
             }
         },
         callbackScope: this,
@@ -405,6 +482,9 @@ class playGame extends Phaser.Scene{
      //  Setting collisions for stars
 
      this.physics.add.overlap(this.player, this.stars, function(player, star){
+      if (gameOptions.SFXmuted === false) {
+        starCollected.play()
+      }
       this.tweens.add({
           targets: star,
           y: star.y - 100,
@@ -413,6 +493,7 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(star);
               this.stars.remove(star);
               if(this.timeLeft > 60) {
@@ -426,6 +507,9 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for jellyfish
      this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
+      if (gameOptions.SFXmuted === false) {
+        jellymodesound.play()
+      }
       this.tweens.add({
           targets: jellyfish,
           y: jellyfish.y - 100,
@@ -434,8 +518,10 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(jellyfish);
               this.stars.remove(jellyfish);
+
               if(this.timeLeft > 60) {
                 this.timeLeft += 1;
               }
@@ -448,7 +534,10 @@ class playGame extends Phaser.Scene{
 
     //  Setting collisions for trashbags
     this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
-
+      
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: trashbag,
           y: trashbag.y - 100,
@@ -457,6 +546,7 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
+              
               this.stars.killAndHide(trashbag);
               this.stars.remove(trashbag);
               if(this.timeLeft > 60) {
@@ -472,7 +562,9 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for trashbags
      this.physics.add.overlap(this.player, this.nets, function(player, net){
-
+      if (gameOptions.SFXmuted === false)  {
+        obstacleHit.play()
+      }
       this.tweens.add({
           targets: net,
           y: net.y - 100,
@@ -495,11 +587,6 @@ class playGame extends Phaser.Scene{
     }, null, this);
   }
 
-  collectStar(player, star){
-    star.destroy();
-  }
-
-
   // adding rocks
   addRocks(){
     let rightmostRock = this.getRightmostRock();
@@ -514,6 +601,7 @@ class playGame extends Phaser.Scene{
         rock.setFrame(Phaser.Math.Between(0, 3))
         this.addRocks()
     }
+
 }
 
   // getting rightmost rock x position
@@ -535,9 +623,47 @@ class playGame extends Phaser.Scene{
     this.player.setVelocityY(-380)
     this.player.angle = 0
     this.framesMoveUp = 15
+
+    
 }
 
   update(){
+
+    if (gameOptions.SFXmuted === false) {
+      this.muteSFX.setText("SFX off")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = true
+        });
+    }
+
+    if (gameOptions.SFXmuted === true) {
+      this.muteSFX.setText("SFX on")
+      this.muteSFX.setInteractive();
+      this.muteSFX.on('pointerdown', () => {
+          gameOptions.SFXmuted = false
+        });
+    }
+
+
+    if (gameOptions.musicMuted === false) {
+      this.muteMusic.setText("Music off")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.stop()
+        gameOptions.musicMuted = true
+      });
+    }
+
+    if (gameOptions.musicMuted === true) {
+      this.muteMusic.setText("Music on")
+      this.muteMusic.setInteractive()
+      this.muteMusic.on('pointerdown', () => {
+        this.bgmusic.play()
+          gameOptions.musicMuted = false
+        });
+    }
+
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
       if(rock.x < - rock.displayWidth){
