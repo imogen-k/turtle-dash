@@ -57,7 +57,9 @@ let gameOptions = {
 
     musicMuted: false,
 
-    scores: []
+    scores: [],
+
+    lastScore: 0
 
 }
 
@@ -350,7 +352,7 @@ class playGame extends Phaser.Scene{
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
 
-    //this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
+  //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
@@ -368,6 +370,25 @@ class playGame extends Phaser.Scene{
 
     // settiing the timer
     this.timeLeft = gameOptions.initialTime;
+
+    
+    
+    this.scoreDisplay = this.add.text(300, 40, 'Score: ' + gameOptions.lastScore)
+
+
+    this.scoreTimer = this.time.addEvent({
+      delay: 100,
+      callback: function(){
+        gameOptions.lastScore += 7
+        this.scoreDisplay.setText('Score: ' + gameOptions.lastScore)
+
+      },
+      callbackScope: this,
+      loop: true
+    })
+
+
+
 
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
@@ -695,7 +716,6 @@ class playGame extends Phaser.Scene{
 
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
-    console.log(percentageOfTimeLeft)
     this.energyBar.setScale(percentageOfTimeLeft, 1)
   }
 
