@@ -325,11 +325,6 @@ class playGame extends Phaser.Scene{
     
     this.coral = this.physics.add.staticGroup();
 
-    //  Create inivisible shark platforms
-    this.sharkplatforms.create(800, 150, 'sharkplatform');
-    this.sharkplatforms.create(800, 450, 'sharkplatform');
-    this.sharkplatforms.create(400, 250, 'sharkplatform');
-
     // group with all active rocks.
     this.rocksGroup = this.add.group();
 
@@ -623,7 +618,7 @@ class playGame extends Phaser.Scene{
 
     }, null, this);
 
-     //  Setting collisions for trashbags
+     //  Setting collisions for nets
      this.physics.add.overlap(this.player, this.nets, function(player, net){
 
 
@@ -691,7 +686,7 @@ class playGame extends Phaser.Scene{
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
     if(percentageOfTimeLeft < 1) {
-      this.energyBar.setSize(200, 300)
+      this.energyBar.setSize(210, 10)
       this.energyBar.setScale(percentageOfTimeLeft,1)
     }
   }
