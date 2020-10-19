@@ -16,7 +16,11 @@ class scoreScene extends Phaser.Scene {
         
         var height = 270
 
-        for(var i = 0; i < gameOptions.scores.length || i === 5; i++) { 
+
+        gameOptions.scores.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0)); 
+        console.log(gameOptions.scores)
+
+        for(var i = 0; i < gameOptions.scores.length && i < 5; i++) { 
             console.log(gameOptions.scores[i].score)   
             var nameToDisplay = gameOptions.scores[i].name
             var scoreToDisplay = gameOptions.scores[i].score
