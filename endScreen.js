@@ -11,7 +11,7 @@ class endScreen extends Phaser.Scene {
       this.add.image(640, 360, 'sea')
   
       
-      this.add.text(290, 170, 'SCORE: (enter last score here)', { fontFamily: 'Helvectiva Neue', fontSize: '50px' })
+      this.add.text(290, 170, 'SCORE: ' + gameOptions.lastScore, { fontFamily: 'Helvectiva Neue', fontSize: '50px' })
       this.add.text(450, 300, 'Enter your name:', { fontFamily: 'Helvectiva Neue', fontSize: '30px' })
       
       
