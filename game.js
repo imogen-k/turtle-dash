@@ -690,7 +690,7 @@ class playGame extends Phaser.Scene{
     let rightmostRock = this.getRightmostRock();
     if(rightmostRock < game.config.width * 2){
         let rock = this.physics.add.sprite(rightmostRock + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "rocks");
-        rock.setOrigin(0.5, 1);
+        rock.setOrigin(0.5, 0.85);
         rock.body.setVelocityX(gameOptions.rockSpeed * -1)
         this.rocksGroup.add(rock);
         if(Phaser.Math.Between(0, 1)){
