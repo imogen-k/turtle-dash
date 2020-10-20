@@ -141,7 +141,6 @@ class preloadGame extends Phaser.Scene{
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
 
-
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
     this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
     this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
@@ -218,6 +217,10 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 100,
       frameHeight: 100
     });
+
+    // world collider on left
+    //this.load.image("worldcollider", "./assets/invisible-collider.png");
+    
 
 }
 
@@ -323,6 +326,7 @@ class playGame extends Phaser.Scene{
 
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
+    //this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
 
     this.floor = this.physics.add.staticGroup();
     this.floor.create(360, 720,'floorboundary')
@@ -548,6 +552,11 @@ class playGame extends Phaser.Scene{
             coral.body.velocity.y = 0;
             coral.setDepth(2);
           }, null, this);
+          // this.physics.add.collider(this.worldcollider, pinkcoral, (world, pcoral) => {
+          //  pcoral.setTint(0xff0000);
+          //   // pcoral.setActive(false);
+          //   // pcoral.setVisible(false);
+          // }, null, this);
         }
       },
       callbackScope: this,
@@ -663,8 +672,7 @@ class playGame extends Phaser.Scene{
           }
       });
 
-    }, null, this);
-  
+    }, null, this);  
 
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
