@@ -11,10 +11,12 @@ class endScreen extends Phaser.Scene {
     create() {
       
         this.add.image(640, 360, 'sea')
-        this.add.text(450, 170, `SCORE: ${this.score}`, { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
-        this.add.text(450, 300, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
+        this.add.image(680, 170, 'turtlesad')
+        this.add.text(450, 220, 'GAME OVER', { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
+        this.add.text(450, 320, `SCORE: ${this.score}`, { fontFamily: 'bubble_bobbleregular', fontSize: '80px' })
+        this.add.text(450, 420, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
         
-        this.name = this.add.rexInputText(770, 372, {
+        this.name = this.add.rexInputText(770, 492, {
             type: 'textarea',
             text: '<your name>',
             color: '#78758d',
@@ -26,14 +28,14 @@ class endScreen extends Phaser.Scene {
         this.name.on('click', (inputText) => {inputText.setText('')});
 
 
-        var submitScoreButton = this.add.image(550, 450, 'submitScore')
+        var submitScoreButton = this.add.image(550, 532, 'submitScore')
         submitScoreButton.setInteractive();
         submitScoreButton.on('pointerdown', () => {
             this.addToLeadboard();
             this.scene.start("ScoreScene");
         })
 
-        var playAgainButton = this.add.image(770, 452, 'playAgain')
+        var playAgainButton = this.add.image(770, 532, 'playAgain')
         playAgainButton.setInteractive();
         playAgainButton.on('pointerdown', () => { this.scene.start("PlayGame")});
     }
