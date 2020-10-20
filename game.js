@@ -756,10 +756,16 @@ class playGame extends Phaser.Scene{
     })
   }
 
+  destroyUnusedJellyfish() {
+    this.jellyfishes.getChildren().forEach(function(jellyfish){
+      if (jellyfish.x < 0) {
+        jellyfish.destroy();
+      }
+    })
+  }
+
 
   update(){
-
-    console.log(this.stars.countActive(true))
     
    this.decreaseTimeBar()
    this.sharkMovement()
