@@ -87,6 +87,7 @@
     "exports-loader": "^1.1.1",
     "imports-loader": "^1.2.0",
     "path": "^0.12.7",
-    "surge": "^0.21.6"
+    "surge": "^0.21.6",
+    "surge-favicon": "^0.2.1"
   }
 }
