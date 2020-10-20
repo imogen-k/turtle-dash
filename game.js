@@ -203,7 +203,7 @@ class preloadGame extends Phaser.Scene{
     });
 
     // world collider on left
-    //this.load.image("worldcollider", "./assets/invisible-collider.png");    
+    this.load.image("worldcollider", "./assets/invisible-collider.png");    
 
 }
 
@@ -308,7 +308,7 @@ class playGame extends Phaser.Scene{
 
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
-    //this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
+    this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
 
     this.floor = this.physics.add.staticGroup();
     this.floor.create(360, 720,'floorboundary')
@@ -486,11 +486,11 @@ class playGame extends Phaser.Scene{
         if (spawnChance <= 0.25) {
           var yellowcoral = this.yellowcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'yellowcoral');
           yellowcoral.setVelocityX(-100);
-          
+          yellowcoral.setDepth(2);
           this.physics.add.collider(this.player, yellowcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
-            coral.setDepth(2);
+            
           }, null, this);
          }
 
@@ -510,10 +510,11 @@ class playGame extends Phaser.Scene{
         if (spawnChance <= 0.25) {
           var greencoral = this.greencorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'greencoral');
           greencoral.setVelocityX(-100);
+          greencoral.setDepth(2);
           this.physics.add.collider(this.player, greencoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
-            coral.setDepth(2);
+         
           }, null, this);
         }
       },
@@ -532,21 +533,23 @@ class playGame extends Phaser.Scene{
         if (spawnChance <= 0.25) {
           var pinkcoral = this.pinkcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'pinkcoral');
           pinkcoral.setVelocityX(-100);
+          pinkcoral.setDepth(2);
           this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
-            coral.setDepth(2);
+            
           }, null, this);
-          // this.physics.add.collider(this.worldcollider, pinkcoral, (world, pcoral) => {
-          //  pcoral.setTint(0xff0000);
-          //   // pcoral.setActive(false);
-          //   // pcoral.setVisible(false);
-          // }, null, this);
         }
       },
       callbackScope: this,
       loop: true
     });
+
+     this.physics.add.collider(this.worldcollider, this.pinkcorals, (world, coral) => {
+     coral.setTint(0xff0000);
+      // pcoral.setActive(false);
+      // pcoral.setVisible(false);
+    }, null, this);
 
      //  Setting collisions for stars
 
@@ -589,7 +592,7 @@ class playGame extends Phaser.Scene{
               this.player.anims.play("run2");
               this.trashcollider.active = false;
               this.netcollider.active = false;
-              this.shark.setVelocityX(-100);
+              this.shark.x -= 50;
           }
       });
 
@@ -628,7 +631,7 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1;
               this.trashbags.killAndHide(trashbag);
               this.trashbags.remove(trashbag);
-              this.shark.setVelocityX(100);
+              this.shark.x += 10;
           }
       });
 
@@ -653,7 +656,7 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1
               this.nets.killAndHide(net);
               this.nets.remove(net);
-              this.shark.setVelocityX(100);
+              this.shark.x += 10;
           }
       });
 
