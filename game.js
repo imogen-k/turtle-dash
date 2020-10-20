@@ -58,9 +58,6 @@ let gameOptions = {
     musicMuted: false,
 
     scores: [],
-
-    lastScore: 0
-
 }
 
 window.onload = function() {
@@ -85,27 +82,16 @@ window.onload = function() {
             delay: 0
         },
         scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene, howToPlay],
-        //backgroundColor: 0x0c88c7,
-
-        // physics settings
         physics: {
           default: 'arcade',
-          // arcade: {
-          //     gravity: {
-          //         y: 300
-          //     },
-          //     debug: false
-          // }
-      }, 
-      
-      
-      dom: {
-        createContainer: true
-    },
+        }, 
+        dom: {
+          createContainer: true
+        },
     }
+
     game = new Phaser.Game(gameConfig);
     window.focus();
-    
 }
 
 class loadScene extends Phaser.Scene{
@@ -115,8 +101,6 @@ class loadScene extends Phaser.Scene{
   preload () {
     this.load.image('sea', './assets/sea-background.jpg');
     this.load.image("turtleStart", "./assets/turtle-loading.png");
-
-    
   }
   create () {
 
@@ -219,10 +203,10 @@ class preloadGame extends Phaser.Scene{
     });
 
     // world collider on left
-    //this.load.image("worldcollider", "./assets/invisible-collider.png");
-    
+    //this.load.image("worldcollider", "./assets/invisible-collider.png");    
 
 }
+
 
   create(){
     
@@ -296,7 +280,6 @@ class preloadGame extends Phaser.Scene{
       repeat: -1
     });
 
-
     // setting net animation
     this.anims.create({
       key: "netpulse",
@@ -309,8 +292,7 @@ class preloadGame extends Phaser.Scene{
     repeat: -1
     });
 
-  this.scene.start("StartMenu");
-    
+    this.scene.start("StartMenu");
 
   }
 }
@@ -350,12 +332,17 @@ class playGame extends Phaser.Scene{
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
-    this.bgmusic.play()
+    if (gameOptions.SFXmuted === true) {
+      this.bgmusic.stop()
+    } else {
+    this.bgmusic.play() }
+    
+    
 
     // muting background music
-    this.muteMusic = this.add.text(40, 10, 'Music')
+    this.muteMusic = this.add.text(40, 10, 'Music', { fontFamily: 'bubble_bobbleregular'})
   
-    this.muteSFX = this.add.text(120, 10, 'SFX')
+    this.muteSFX = this.add.text(120, 10, 'SFX', { fontFamily: 'bubble_bobbleregular'})
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
@@ -366,22 +353,20 @@ class playGame extends Phaser.Scene{
     this.timeLeft = gameOptions.initialTime;
 
     
-    
-    this.scoreDisplay = this.add.text(300, 40, 'Score: ' + gameOptions.lastScore)
+
+    this.score = 0;
+    this.scoreDisplay = this.add.text(300, 40, `Score: ${this.score}`, { fontFamily: 'bubble_bobbleregular'})
 
 
     this.scoreTimer = this.time.addEvent({
       delay: 100,
       callback: function(){
-        gameOptions.lastScore += 7
-        this.scoreDisplay.setText('Score: ' + gameOptions.lastScore)
-
+        this.score += 7
+        this.scoreDisplay.setText(`Score: ${this.score}`)
       },
       callbackScope: this,
       loop: true
     })
-
-
 
 
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
@@ -737,9 +722,13 @@ class playGame extends Phaser.Scene{
 
   checkForGameOver() {
     if(this.timeLeft <= 0){
-      this.bgmusic.stop();
-      this.scene.start("EndScreen");
+     this.gameOver()
     }
+  }
+
+  gameOver() {
+    this.bgmusic.stop();
+    this.scene.start("EndScreen", {score: this.score});
   }
 
 
