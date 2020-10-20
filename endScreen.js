@@ -11,7 +11,6 @@ class endScreen extends Phaser.Scene {
     create() {
       
         this.add.image(640, 360, 'sea')
-        
         this.add.text(450, 170, `SCORE: ${this.score}`, { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
         this.add.text(450, 300, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
         
@@ -23,12 +22,11 @@ class endScreen extends Phaser.Scene {
             fontFamily: 'bubble_bobbleregular',
         });
         this.name.resize(200, 150);
-        this.name.on('textchange', (inputText) => {inputText.setStyle(color,'#FFF')});
+        //this.name.on('textchange', (inputText) => {inputText.setStyle(color,'#FFF')});
         this.name.on('click', (inputText) => {inputText.setText('')});
 
 
         var submitScoreButton = this.add.image(550, 450, 'submitScore')
-        
         submitScoreButton.setInteractive();
         submitScoreButton.on('pointerdown', () => {
             this.addToLeadboard();
@@ -37,9 +35,7 @@ class endScreen extends Phaser.Scene {
 
         var playAgainButton = this.add.image(770, 452, 'playAgain')
         playAgainButton.setInteractive();
-        playAgainButton.on('pointerdown', () => { 
-            this.scene.start("PlayGame");
-        });
+        playAgainButton.on('pointerdown', () => { this.scene.start("PlayGame")});
     }
 
     addToLeadboard() {
