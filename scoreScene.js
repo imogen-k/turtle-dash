@@ -2,8 +2,7 @@ class scoreScene extends Phaser.Scene {
 
     constructor(){
         super("ScoreScene");
-    }
-     
+    }    
   
     create() {
  
@@ -16,12 +15,15 @@ class scoreScene extends Phaser.Scene {
         
         var height = 270
 
+        console.log(localStorage)
 
-        gameOptions.scores.sort((a,b) => (a.score < b.score) ? 1 : ((b.score < a.score) ? -1 : 0)); 
+        this.leaderboard = JSON.parse(localStorage.getItem('leaderboard'))
         
-        for(var i = 0; i < gameOptions.scores.length && i < 5; i++) { 
-            var nameToDisplay = gameOptions.scores[i].name
-            var scoreToDisplay = gameOptions.scores[i].score
+
+        
+        for(var i = 0; i < leaderboard.length && i < 5; i++) { 
+            var nameToDisplay = leaderboard[i].name
+            var scoreToDisplay = leaderboard[i].score
             this.add.text(500, height, nameToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
             this.add.text(750, height, scoreToDisplay, { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })
             height += 50;
@@ -33,9 +35,8 @@ class scoreScene extends Phaser.Scene {
         again.setInteractive();
   
         again.on('pointerdown', () => { 
-        gameOptions.lastScore = 0;
+        //gameOptions.lastScore = 0;
         this.scene.start("PlayGame");
-    
-    });
-  }
+        });
     }
+}

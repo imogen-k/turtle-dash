@@ -58,9 +58,6 @@ let gameOptions = {
     musicMuted: false,
 
     scores: [],
-
-    lastScore: 0
-
 }
 
 window.onload = function() {
@@ -85,27 +82,16 @@ window.onload = function() {
             delay: 0
         },
         scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene, howToPlay],
-        //backgroundColor: 0x0c88c7,
-
-        // physics settings
         physics: {
           default: 'arcade',
-          // arcade: {
-          //     gravity: {
-          //         y: 300
-          //     },
-          //     debug: false
-          // }
-      }, 
-      
-      
-      dom: {
-        createContainer: true
-    },
+        }, 
+        dom: {
+          createContainer: true
+        },
     }
+
     game = new Phaser.Game(gameConfig);
     window.focus();
-    
 }
 
 class loadScene extends Phaser.Scene{
@@ -115,8 +101,6 @@ class loadScene extends Phaser.Scene{
   preload () {
     this.load.image('sea', './assets/sea-background.jpg');
     this.load.image("turtleStart", "./assets/turtle-loading.png");
-
-    
   }
   create () {
 
@@ -210,14 +194,7 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 100,
       frameHeight: 100
     });
-
-    // the animated turtle is a sprite sheet made by 800 x 600 pixels
-    // this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
-    //   frameWidth: 800,
-    //   frameHeight: 600
-    // });
-
-}
+  }
 
   create(){
     
@@ -291,7 +268,6 @@ class preloadGame extends Phaser.Scene{
       repeat: -1
     });
 
-
     // setting net animation
     this.anims.create({
       key: "netpulse",
@@ -304,20 +280,7 @@ class preloadGame extends Phaser.Scene{
     repeat: -1
     });
 
-
-    
-    // this.anims.create({
-    //   key: "turtleGif",
-    //   frames: this.anims.generateFrameNumbers("turtleStart", {
-    //     start: 0,
-    //     end: 145
-    //   }),
-    //   frameRate: 20,
-    //   repeat: -1
-    // });
-
-  this.scene.start("StartMenu");
-    
+    this.scene.start("StartMenu");
 
   }
 }
@@ -372,16 +335,15 @@ class playGame extends Phaser.Scene{
     this.timeLeft = gameOptions.initialTime;
 
     
-    
-    this.scoreDisplay = this.add.text(300, 40, 'Score: ' + gameOptions.lastScore)
+    this.score = 0;
+    this.scoreDisplay = this.add.text(300, 40, `Score: ${this.score}`)
 
 
     this.scoreTimer = this.time.addEvent({
       delay: 100,
       callback: function(){
-        gameOptions.lastScore += 7
-        this.scoreDisplay.setText('Score: ' + gameOptions.lastScore)
-
+        this.score += 7
+        this.scoreDisplay.setText(`Score: ${this.score}`)
       },
       callbackScope: this,
       loop: true
@@ -721,9 +683,13 @@ class playGame extends Phaser.Scene{
 
   checkForGameOver() {
     if(this.timeLeft <= 0){
-      this.bgmusic.stop();
-      this.scene.start("EndScreen");
+     this.gameOver()
     }
+  }
+
+  gameOver() {
+    this.bgmusic.stop();
+    this.scene.start("EndScreen", {score: this.score});
   }
 
 
