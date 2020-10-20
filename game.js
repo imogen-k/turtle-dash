@@ -162,7 +162,8 @@ class preloadGame extends Phaser.Scene{
 
 
     // mute buttons
-    this.load.image('mute', './assets/mute-white.png');
+    this.load.image('soundOn', './assets/sound-on-btn.png');
+    this.load.image('soundOff', './assets/sound-off-btn.png');
 
     //buttons
     this.load.image('playButton', './assets/start-btn.png');
@@ -359,9 +360,9 @@ class playGame extends Phaser.Scene{
     this.bgmusic.play()
 
     // muting background music
-    this.muteMusic = this.add.text(60, 40, 'Music off')
+    this.muteMusic = this.add.text(40, 10, 'Music')
   
-    this.muteSFX = this.add.text(200, 40, 'SFX off')
+    this.muteSFX = this.add.text(120, 10, 'SFX')
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
@@ -734,35 +735,35 @@ class playGame extends Phaser.Scene{
    this.checkForGameOver()
 
     if (gameOptions.SFXmuted === false) {
-      this.muteSFX.setText("SFX off")
-      this.muteSFX.setInteractive();
-      this.muteSFX.on('pointerdown', () => {
+      this.SFX = this.add.image(135, 50, 'soundOn')
+      this.SFX.setInteractive();
+      this.SFX.on('pointerdown', () => {
           gameOptions.SFXmuted = true
         });
     }
 
     if (gameOptions.SFXmuted === true) {
-      this.muteSFX.setText("SFX on")
-      this.muteSFX.setInteractive();
-      this.muteSFX.on('pointerdown', () => {
+      this.SFX = this.add.image(135, 50, 'soundOff')
+      this.SFX.setInteractive();
+      this.SFX.on('pointerdown', () => {
           gameOptions.SFXmuted = false
         });
     }
 
 
     if (gameOptions.musicMuted === false) {
-      this.muteMusic.setText("Music off")
-      this.muteMusic.setInteractive()
-      this.muteMusic.on('pointerdown', () => {
+      this.music = this.add.image(63, 50, 'soundOn')
+      this.music.setInteractive()
+      this.music.on('pointerdown', () => {
         this.bgmusic.stop()
         gameOptions.musicMuted = true
       });
     }
 
     if (gameOptions.musicMuted === true) {
-      this.muteMusic.setText("Music on")
-      this.muteMusic.setInteractive()
-      this.muteMusic.on('pointerdown', () => {
+      this.music = this.add.image(63, 50, 'soundOff')
+      this.music.setInteractive()
+      this.music.on('pointerdown', () => {
         this.bgmusic.play()
           gameOptions.musicMuted = false
         });
