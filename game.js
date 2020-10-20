@@ -170,6 +170,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('howtoplayButton', './assets/how-to-play-btn.png');
     this.load.image('playAgain', './assets/play-again-btn.png');
     this.load.image('submitScore', './assets/submit-score-btn.png');
+    this.load.image('backToMenu', './assets/back-to-menu-btn.png');
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
@@ -217,12 +218,6 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 100,
       frameHeight: 100
     });
-
-    // the animated turtle is a sprite sheet made by 800 x 600 pixels
-    // this.load.spritesheet("turtleStart", "./assets/turtle-start.png", {
-    //   frameWidth: 800,
-    //   frameHeight: 600
-    // });
 
 }
 
@@ -310,18 +305,6 @@ class preloadGame extends Phaser.Scene{
     yoyo: true,
     repeat: -1
     });
-
-
-    
-    // this.anims.create({
-    //   key: "turtleGif",
-    //   frames: this.anims.generateFrameNumbers("turtleStart", {
-    //     start: 0,
-    //     end: 145
-    //   }),
-    //   frameRate: 20,
-    //   repeat: -1
-    // });
 
   this.scene.start("StartMenu");
     
@@ -416,9 +399,6 @@ class playGame extends Phaser.Scene{
     this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
-
-    
-    
    
     // the player is not dying
     this.dying = false;
@@ -614,9 +594,6 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-            // if(this.timeLeft <= 60) {
-            //   this.timeLeft += 1 
-            // }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
               this.player.anims.play("run2");

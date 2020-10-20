@@ -28,14 +28,22 @@ class scoreScene extends Phaser.Scene {
         }
         
 
-        var again = this.add.image(640, 580, 'playAgain')
+        var again = this.add.image(530, 580, 'playAgain');
+        var back = this.add.image(770, 580, 'backToMenu')
   
         again.setInteractive();
+        back.setInteractive();
   
         again.on('pointerdown', () => { 
         gameOptions.lastScore = 0;
         this.scene.start("PlayGame");
     
-    });
+        });
+
+        back.on('pointerdown', () => { 
+            gameOptions.lastScore = 0;
+            this.scene.start("StartMenu");
+        
+            });
   }
     }
