@@ -724,7 +724,6 @@ class playGame extends Phaser.Scene{
       this.shark.setVelocityY(-90)
       this.shark.angle = 0
     }
-    
   }
 
   decreaseTimeBar() {
@@ -749,12 +748,23 @@ class playGame extends Phaser.Scene{
     }
   }
 
+  destroyUnusedStars() {
+    this.stars.getChildren().forEach(function(star){
+      if (star.x < 0) {
+        star.destroy();
+      }
+    })
+  }
+
 
   update(){
+
+    console.log(this.stars.countActive(true))
     
    this.decreaseTimeBar()
    this.sharkMovement()
    this.checkForGameOver()
+   this.destroyUnusedStars()
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
