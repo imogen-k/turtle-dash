@@ -497,18 +497,14 @@ class playGame extends Phaser.Scene{
         if (spawnChance <= 0.25) {
           var yellowcoral = this.yellowcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'yellowcoral');
           yellowcoral.setVelocityX(-100);
+          
           this.physics.add.collider(this.player, yellowcoral, (player, coral) => {
-            // var touching = player.body.wasTouching;
-            // if (touching.down) {
-            //   coral.body.velocity.y = 0;
-            //   coral.body.allowGravity = false;
-            //   coral.body.mass = 100;
-            // }
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
             coral.setDepth(2);
           }, null, this);
          }
+
       },
       callbackScope: this,
       loop: true
