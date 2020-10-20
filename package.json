@@ -71,6 +71,7 @@
     "eslint": "^7.11.0",
     "eslint-plugin-es5": "^1.5.0",
     "fs-extra": "^9.0.1",
+    "jasmine": "^3.6.2",
     "jsdoc": "^3.6.6",
     "node-sloc": "^0.1.12",
     "remove-files-webpack-plugin": "^1.4.4",
