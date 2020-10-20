@@ -81,7 +81,7 @@ window.onload = function() {
             loop: false,
             delay: 0
         },
-        scene: [loadScene, preloadGame, startMenu, playGame, ScenScreen, scoreScene, howToPlay],
+        scene: [loadScene, preloadGame, startMenu, playGame, endScreen, scoreScene, howToPlay],
         physics: {
           default: 'arcade',
         }, 
