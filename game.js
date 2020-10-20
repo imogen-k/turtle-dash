@@ -203,7 +203,7 @@ class preloadGame extends Phaser.Scene{
     });
 
     // world collider on left
-    this.load.image("worldcollider", "./assets/invisible-collider.png");    
+    //this.load.image("worldcollider", "./assets/invisible-collider.png");    
 
 }
 
@@ -308,7 +308,7 @@ class playGame extends Phaser.Scene{
 
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
-    this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
+    //this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
 
     this.floor = this.physics.add.staticGroup();
     this.floor.create(360, 720,'floorboundary')
@@ -340,9 +340,11 @@ class playGame extends Phaser.Scene{
     
 
     // muting background music
-    this.muteMusic = this.add.text(40, 10, 'Music', { fontFamily: 'bubble_bobbleregular'})
+    this.muteMusic = this.add.text(46, 10, 'Music', { fontFamily: 'bubble_bobbleregular'});
+    this.muteMusic.setDepth(3);
   
-    this.muteSFX = this.add.text(120, 10, 'SFX', { fontFamily: 'bubble_bobbleregular'})
+    this.muteSFX = this.add.text(124, 10, 'SFX', { fontFamily: 'bubble_bobbleregular'});
+    this.muteSFX.setDepth(3);
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
@@ -352,11 +354,9 @@ class playGame extends Phaser.Scene{
     // settiing the timer
     this.timeLeft = gameOptions.initialTime;
 
-    
-
     this.score = 0;
-    this.scoreDisplay = this.add.text(300, 40, `Score: ${this.score}`, { fontFamily: 'bubble_bobbleregular'})
-
+    this.scoreDisplay = this.add.text(42, 80, `Score: ${this.score}`, { fontFamily: 'bubble_bobbleregular', fontSize: '30px'})
+    this.scoreDisplay.setDepth(3);
 
     this.scoreTimer = this.time.addEvent({
       delay: 100,
@@ -371,7 +371,8 @@ class playGame extends Phaser.Scene{
 
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
-    this.energyBar.setOrigin(0,0)
+    this.energyBar.setOrigin(0,0);
+    this.energyBar.setDepth(3);
 
 
     this.gameTimer = this.time.addEvent({
@@ -544,12 +545,6 @@ class playGame extends Phaser.Scene{
       callbackScope: this,
       loop: true
     });
-
-     this.physics.add.collider(this.worldcollider, this.pinkcorals, (world, coral) => {
-     coral.setTint(0xff0000);
-      // pcoral.setActive(false);
-      // pcoral.setVisible(false);
-    }, null, this);
 
      //  Setting collisions for stars
 
@@ -744,6 +739,7 @@ class playGame extends Phaser.Scene{
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
       this.SFX.setInteractive();
+      this.SFX.setDepth(3);
       this.SFX.on('pointerdown', () => {
           gameOptions.SFXmuted = true
         });
@@ -752,6 +748,7 @@ class playGame extends Phaser.Scene{
     if (gameOptions.SFXmuted === true) {
       this.SFX = this.add.image(135, 50, 'soundOff')
       this.SFX.setInteractive();
+      this.SFX.setDepth(3);
       this.SFX.on('pointerdown', () => {
           gameOptions.SFXmuted = false
         });
@@ -760,7 +757,8 @@ class playGame extends Phaser.Scene{
 
     if (gameOptions.musicMuted === false) {
       this.music = this.add.image(63, 50, 'soundOn')
-      this.music.setInteractive()
+      this.music.setInteractive();
+      this.music.setDepth(3);
       this.music.on('pointerdown', () => {
         this.bgmusic.stop()
         gameOptions.musicMuted = true
@@ -769,7 +767,8 @@ class playGame extends Phaser.Scene{
 
     if (gameOptions.musicMuted === true) {
       this.music = this.add.image(63, 50, 'soundOff')
-      this.music.setInteractive()
+      this.music.setInteractive();
+      this.music.setDepth(3);
       this.music.on('pointerdown', () => {
         this.bgmusic.play()
           gameOptions.musicMuted = false
