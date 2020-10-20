@@ -413,6 +413,13 @@ class playGame extends Phaser.Scene{
 
     this.muteMusic = this.add.text(179, 10, 'Fullscreen', { fontFamily: 'bubble_bobbleregular'});
 
+    this.resetGame = this.add.text(270, 10, 'Reset', { fontFamily: 'bubble_bobbleregular'} )
+    this.resetGame.setInteractive()
+    this.resetGame.on('pointerdown', () => { 
+      this.bgmusic.stop()
+      this.scene.start("PlayGame")
+    });
+
     // create star group
     this.stars = this.physics.add.group()
 
