@@ -171,6 +171,12 @@ class preloadGame extends Phaser.Scene{
     this.load.image('playAgain', './assets/play-again-btn.png');
     this.load.image('submitScore', './assets/submit-score-btn.png');
 
+    // how to play screen
+    this.load.image('howtoplay', './assets/how-to-play.png');
+
+    // sad turtle
+    this.load.image('turtlesad', './assets/turtle-sad.png');
+
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
 
@@ -436,6 +442,7 @@ class playGame extends Phaser.Scene{
         var star = this.stars.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'star');
         star.setVelocityX(-200);
         star.anims.play("starpulse");
+        star.setDepth(2);
       },
       callbackScope: this,
       loop: true
@@ -449,10 +456,11 @@ class playGame extends Phaser.Scene{
       delay: 1000,
       callback: function(){
         var spawnChance = Math.random();
-        if (spawnChance <= 0.5) {
+        if (spawnChance <= 0.25) {
           var jellyfish = this.jellyfishes.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'jellyfish');
           jellyfish.setVelocityX(-400);
           jellyfish.anims.play("jellyfishpulse");
+          jellyfish.setDepth(2);
         }
       },
       callbackScope: this,
@@ -471,6 +479,7 @@ class playGame extends Phaser.Scene{
           var trashbag = this.trashbags.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'trashbag');
           trashbag.setVelocityX(-100);
           trashbag.anims.play("trashbagpulse");
+          trashbag.setDepth(2);
         }
       },
       callbackScope: this,
@@ -489,6 +498,7 @@ class playGame extends Phaser.Scene{
           var net = this.nets.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'net');
           net.setVelocityX(-100);
           net.anims.play("netpulse");
+          net.setDepth(2);
         }
       },
       callbackScope: this,
@@ -515,6 +525,7 @@ class playGame extends Phaser.Scene{
             // }
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
          }
       },
@@ -536,6 +547,7 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, greencoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
         }
       },
@@ -557,6 +569,7 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
+            coral.setDepth(2);
           }, null, this);
         }
       },
@@ -605,14 +618,18 @@ class playGame extends Phaser.Scene{
             }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
-              this.player.anims.play("run2")
+              this.player.anims.play("run2");
+              this.trashcollider.active = false;
+              this.netcollider.active = false;
           }
       });
 
       var timer = this.time.addEvent({
         delay: 5000,
         callback: function(){
-          this.player.anims.play("run")
+          this.player.anims.play("run");
+          this.trashcollider.active = true;
+          this.netcollider.active = true;
         },
       
       callbackScope: this,
@@ -622,7 +639,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
     //  Setting collisions for trashbags
-    this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+    this.trashcollider = this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
 
 
       trashbag.setTint(0xff0000);
@@ -648,7 +665,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
      //  Setting collisions for nets
-     this.physics.add.overlap(this.player, this.nets, function(player, net){
+     this.netcollider = this.physics.add.overlap(this.player, this.nets, function(player, net){
       net.setTint(0xff0000);
 
       if (gameOptions.SFXmuted === false)  {
@@ -677,7 +694,7 @@ class playGame extends Phaser.Scene{
     let rightmostRock = this.getRightmostRock();
     if(rightmostRock < game.config.width * 2){
         let rock = this.physics.add.sprite(rightmostRock + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "rocks");
-        rock.setOrigin(0.5, 1);
+        rock.setOrigin(0.5, 0.85);
         rock.body.setVelocityX(gameOptions.rockSpeed * -1)
         this.rocksGroup.add(rock);
         if(Phaser.Math.Between(0, 1)){
