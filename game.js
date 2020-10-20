@@ -560,7 +560,7 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for stars
 
-     this.physics.add.overlap(this.player, this.stars, function(player, star){
+     this.physics.add.collider(this.player, this.stars, function(player, star){
       if (gameOptions.SFXmuted === false) {
         starCollected.play()
       }
@@ -582,7 +582,7 @@ class playGame extends Phaser.Scene{
        }, null, this);
 
      //  Setting collisions for jellyfish
-     this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
+     this.physics.add.collider(this.player, this.jellyfishes, function(player, jellyfish){
       if (gameOptions.SFXmuted === false) {
         jellymodesound.play()
       }
@@ -618,7 +618,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
     //  Setting collisions for trashbags
-    this.trashcollider = this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+    this.trashcollider = this.physics.add.collider(this.player, this.trashbags, function(player, trashbag){
 
 
       trashbag.setTint(0xff0000);
@@ -645,7 +645,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
      //  Setting collisions for nets
-     this.netcollider = this.physics.add.overlap(this.player, this.nets, function(player, net){
+     this.netcollider = this.physics.add.collider(this.player, this.nets, function(player, net){
       net.setTint(0xff0000);
 
       if (gameOptions.SFXmuted === false)  {
@@ -671,7 +671,7 @@ class playGame extends Phaser.Scene{
   
 
   // collisions for shark and player
-  this.sharkcollider = this.physics.add.overlap(this.player, this.shark, function(player, shark){
+  this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
 
     if (gameOptions.SFXmuted === false)  {
       obstacleHit.play()
