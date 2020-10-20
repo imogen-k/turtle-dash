@@ -129,6 +129,7 @@ class preloadGame extends Phaser.Scene{
     this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
     this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
     this.load.audio("collect-star", "./assets/zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
+    this.load.audio("gameOverSound", "./assets/game-over-sound-effect.mp3")
 
 
     // coral
@@ -659,12 +660,11 @@ class playGame extends Phaser.Scene{
 
     }, null, this);  
 
+    this.gameOverSound = this.sound.add('gameOverSound');
+
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
-
-    if (gameOptions.SFXmuted === false)  {
-      obstacleHit.play()
-    }
+  
     this.gameOver()
   }, null, this);
 }
@@ -725,8 +725,14 @@ class playGame extends Phaser.Scene{
   }
 
   gameOver() {
-    this.bgmusic.stop();
-    this.scene.start("EndScreen", {score: this.score});
+    if(gameOptions.SFXmuted === false) {
+       this.gameOverSound.play()
+       this.bgmusic.stop();
+       this.scene.start("EndScreen", {score: this.score});
+      } else {
+      this.bgmusic.stop();
+      this.scene.start("EndScreen", {score: this.score});
+    }
   }
 
 
