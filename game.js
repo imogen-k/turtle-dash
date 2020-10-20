@@ -157,6 +157,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('backToMenu', './assets/back-to-menu-btn.png');
     this.load.image('fullscreenMode', './assets/fullscreen-btn.png');
     this.load.image('fullscreenModeOff', './assets/fullscreen-off-btn.png');
+    this.load.image('resetButton', './assets/reset-btn.png');
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
@@ -788,18 +789,29 @@ class playGame extends Phaser.Scene{
         });
     }
 
+    this.fullscreen = false;
 
+    if(this.fullscreen === false) {
     this.fullscreenOn = this.add.image(210, 50, 'fullscreenMode')
     this.fullscreenOn.setInteractive();
     this.fullscreenOn.setDepth(3);
     this.fullscreenOn.on('pointerdown', () => {
-      if(!this.scale.isFullscreen){
         this.scale.startFullscreen();
-      }
-      else if(this.scale.isFullscreen){
+        this.fullscreen = true;
+      })
+    }
+
+    if(this.scale.isFullscreen) {
+      this.fullscreenOff = this.add.image(210, 50, 'fullscreenModeOff')
+      this.fullscreenOff.setInteractive();
+      this.fullscreenOff.setDepth(3);
+      this.fullscreenOff.on('pointerdown', () => {
+
           this.scale.stopFullscreen();
+          this.fullscreen = false;
+        }
+        )
       }
-    })
 
 
     // recycling rocks
