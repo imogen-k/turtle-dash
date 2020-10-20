@@ -91,10 +91,5 @@
     "imports-loader": "^1.2.0",
     "path": "^0.12.7",
     "surge-favicon": "^0.2.1"
-  },
-  "git": {
-    "scripts": {
-      "pre-push": "surge --project /turtle-wiggle --domain turtle-dash.surge.sh"
-    }
   }
 }
