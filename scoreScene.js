@@ -16,9 +16,14 @@ class scoreScene extends Phaser.Scene {
         this.displayLeaderboard(this.leaderboard);
         this.resetLocalStorage(this.leaderboard)
 
-        var playAgainButton = this.add.image(640, 600, 'playAgain')
+        var playAgainButton = this.add.image(530, 580, 'playAgain')
         playAgainButton.setInteractive();
         playAgainButton.on('pointerdown', () => { this.scene.start("PlayGame")});
+      
+        var backButton = this.add.image(770, 580, 'backToMenu')
+        backButton.setInteractive();
+        backButton.on('pointerdown', () => { this.scene.start("StartMenu")});
+      
     }
 
     sortLeaderboard(leaderboard) {
@@ -36,9 +41,11 @@ class scoreScene extends Phaser.Scene {
         }
     }
 
+
     resetLocalStorage(leaderboard) {
         if (this.leaderboard.length > 6) {
             localStorage.setItem('leaderboard', JSON.stringify(this.leaderboard.slice(0, 5)))
         }
     }
 }
+

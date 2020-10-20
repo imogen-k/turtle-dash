@@ -125,7 +125,6 @@ class preloadGame extends Phaser.Scene{
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
 
-
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
     this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
     this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
@@ -154,6 +153,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('howtoplayButton', './assets/how-to-play-btn.png');
     this.load.image('playAgain', './assets/play-again-btn.png');
     this.load.image('submitScore', './assets/submit-score-btn.png');
+    this.load.image('backToMenu', './assets/back-to-menu-btn.png');
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
@@ -201,7 +201,12 @@ class preloadGame extends Phaser.Scene{
       frameWidth: 100,
       frameHeight: 100
     });
-  }
+
+    // world collider on left
+    //this.load.image("worldcollider", "./assets/invisible-collider.png");    
+
+}
+
 
   create(){
     
@@ -303,6 +308,7 @@ class playGame extends Phaser.Scene{
 
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
+    //this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
 
     this.floor = this.physics.add.staticGroup();
     this.floor.create(360, 720,'floorboundary')
@@ -363,8 +369,6 @@ class playGame extends Phaser.Scene{
     })
 
 
-
-
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0)
@@ -380,12 +384,10 @@ class playGame extends Phaser.Scene{
     });
 
     // adding the shark;
-    this.shark = this.physics.add.sprite(0, 360, "shark");
+    this.shark = this.physics.add.sprite(-150, 360, "shark");
     this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
-    
-    
    
     // the player is not dying
     this.dying = false;
@@ -484,18 +486,14 @@ class playGame extends Phaser.Scene{
         if (spawnChance <= 0.25) {
           var yellowcoral = this.yellowcorals.create(game.config.width, game.config.height * Phaser.Math.FloatBetween(0.05, 0.95), 'yellowcoral');
           yellowcoral.setVelocityX(-100);
+          
           this.physics.add.collider(this.player, yellowcoral, (player, coral) => {
-            // var touching = player.body.wasTouching;
-            // if (touching.down) {
-            //   coral.body.velocity.y = 0;
-            //   coral.body.allowGravity = false;
-            //   coral.body.mass = 100;
-            // }
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
             coral.setDepth(2);
           }, null, this);
          }
+
       },
       callbackScope: this,
       loop: true
@@ -539,6 +537,11 @@ class playGame extends Phaser.Scene{
             coral.body.velocity.y = 0;
             coral.setDepth(2);
           }, null, this);
+          // this.physics.add.collider(this.worldcollider, pinkcoral, (world, pcoral) => {
+          //  pcoral.setTint(0xff0000);
+          //   // pcoral.setActive(false);
+          //   // pcoral.setVisible(false);
+          // }, null, this);
         }
       },
       callbackScope: this,
@@ -547,7 +550,7 @@ class playGame extends Phaser.Scene{
 
      //  Setting collisions for stars
 
-     this.physics.add.overlap(this.player, this.stars, function(player, star){
+     this.physics.add.collider(this.player, this.stars, function(player, star){
       if (gameOptions.SFXmuted === false) {
         starCollected.play()
       }
@@ -569,7 +572,7 @@ class playGame extends Phaser.Scene{
        }, null, this);
 
      //  Setting collisions for jellyfish
-     this.physics.add.overlap(this.player, this.jellyfishes, function(player, jellyfish){
+     this.physics.add.collider(this.player, this.jellyfishes, function(player, jellyfish){
       if (gameOptions.SFXmuted === false) {
         jellymodesound.play()
       }
@@ -581,14 +584,12 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-            if(this.timeLeft <= 60) {
-              this.timeLeft += 1 
-            }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
               this.player.anims.play("run2");
               this.trashcollider.active = false;
               this.netcollider.active = false;
+              this.shark.setVelocityX(-100);
           }
       });
 
@@ -607,7 +608,7 @@ class playGame extends Phaser.Scene{
     }, null, this);
 
     //  Setting collisions for trashbags
-    this.trashcollider = this.physics.add.overlap(this.player, this.trashbags, function(player, trashbag){
+    this.trashcollider = this.physics.add.collider(this.player, this.trashbags, function(player, trashbag){
 
 
       trashbag.setTint(0xff0000);
@@ -627,13 +628,14 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1;
               this.trashbags.killAndHide(trashbag);
               this.trashbags.remove(trashbag);
+              this.shark.setVelocityX(100);
           }
       });
 
     }, null, this);
 
      //  Setting collisions for nets
-     this.netcollider = this.physics.add.overlap(this.player, this.nets, function(player, net){
+     this.netcollider = this.physics.add.collider(this.player, this.nets, function(player, net){
       net.setTint(0xff0000);
 
       if (gameOptions.SFXmuted === false)  {
@@ -651,11 +653,23 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1
               this.nets.killAndHide(net);
               this.nets.remove(net);
+              this.shark.setVelocityX(100);
           }
       });
 
-    }, null, this);
-  }
+    }, null, this);  
+
+  // collisions for shark and player
+  this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
+
+    if (gameOptions.SFXmuted === false)  {
+      obstacleHit.play()
+    }
+    this.bgmusic.stop();
+    this.scene.start("EndScreen");
+
+  }, null, this);
+}
 
   // adding rocks
   addRocks(){
@@ -698,6 +712,7 @@ class playGame extends Phaser.Scene{
       this.shark.setVelocityY(-90)
       this.shark.angle = 0
     }
+    
   }
 
   decreaseTimeBar() {
