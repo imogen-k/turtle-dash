@@ -154,6 +154,8 @@ class preloadGame extends Phaser.Scene{
     this.load.image('playAgain', './assets/play-again-btn.png');
     this.load.image('submitScore', './assets/submit-score-btn.png');
     this.load.image('backToMenu', './assets/back-to-menu-btn.png');
+    this.load.image('fullscreenMode', './assets/fullscreen-btn.png');
+    this.load.image('fullscreenModeOff', './assets/fullscreen-off-btn.png');
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
@@ -336,8 +338,6 @@ class playGame extends Phaser.Scene{
       this.bgmusic.stop()
     } else {
     this.bgmusic.play() }
-    
-    
 
     // muting background music
     this.muteMusic = this.add.text(46, 10, 'Music', { fontFamily: 'bubble_bobbleregular'});
@@ -402,6 +402,15 @@ class playGame extends Phaser.Scene{
     this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.framesMoveUp = 0;
     this.player.body.allowGravity = false;
+
+    //fullscreen mode
+    this.input.keyboard.on("keydown_F", function(){
+      if(!this.scale.isFullscreen){
+          this.scale.startFullscreen();
+      }
+    }, this);
+
+    this.muteMusic = this.add.text(179, 10, 'Fullscreen', { fontFamily: 'bubble_bobbleregular'});
 
     // create star group
     this.stars = this.physics.add.group()
@@ -774,6 +783,19 @@ class playGame extends Phaser.Scene{
           gameOptions.musicMuted = false
         });
     }
+
+
+    this.fullscreenOn = this.add.image(210, 50, 'fullscreenMode')
+    this.fullscreenOn.setInteractive();
+    this.fullscreenOn.setDepth(3);
+    this.fullscreenOn.on('pointerdown', () => {
+      if(!this.scale.isFullscreen){
+        this.scale.startFullscreen();
+      }
+      else if(this.scale.isFullscreen){
+          this.scale.stopFullscreen();
+      }
+    })
 
 
     // recycling rocks
