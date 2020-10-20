@@ -323,7 +323,7 @@ class playGame extends Phaser.Scene{
 
     // adding the player;
     this.player = this.physics.add.sprite(320, 360, "player");
-    this.player.setGravityY(gameOptions.playerGravity);
+    this.player.setGravityY(200);
     this.player.setDepth(2);
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
@@ -396,11 +396,6 @@ class playGame extends Phaser.Scene{
       this.player.anims.play("run");
       this.shark.anims.play("swim");
     }
-
-   // player movement
-    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    this.framesMoveUp = 0;
-    this.player.body.allowGravity = false;
 
     // create star group
     this.stars = this.physics.add.group()
@@ -695,10 +690,17 @@ class playGame extends Phaser.Scene{
     return rightmostRock;
   }
 
+  turtleMovement() {
+    console.log(this.player.velocity.y)
+    console.log(this.player.angle)
+    if (this.player.velocityY > 0 && this.player.angle < 50) {
+      this.player.angle += 1
+    }
+  }
+
   moveTurtle() {
-    this.player.setVelocityY(-380)
+    this.player.setVelocityY(-200)
     this.player.angle = 0
-    this.framesMoveUp = 15
   }
 
   sharkMovement() {
@@ -731,10 +733,14 @@ class playGame extends Phaser.Scene{
 
 
   update(){
-    
-   this.decreaseTimeBar()
-   this.sharkMovement()
-   this.checkForGameOver()
+
+    this.turtleMovement()
+
+    this.input.on('pointerdown', () => { this.moveTurtle() });
+
+    this.decreaseTimeBar()
+    this.sharkMovement()
+    this.checkForGameOver()
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
@@ -785,15 +791,15 @@ class playGame extends Phaser.Scene{
       }
     }, this);
 
-    if (this.framesMoveUp > 0) {
-      this.framesMoveUp--
-    } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
-      this.moveTurtle()
-    } else {
-      this.player.setVelocityY(100)
-      if (this.player.angle < 50) {
-        this.player.angle += 1
-      }
-    }
+    // if (this.framesMoveUp > 0) {
+    //   this.framesMoveUp--
+    // } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
+    //   this.moveTurtle()
+    // } else {
+    //   this.player.setVelocityY(100)
+    //   if (this.player.angle < 50) {
+    //     this.player.angle += 1
+    //   }
+    // }
   }
 }
