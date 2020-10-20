@@ -412,10 +412,11 @@ class playGame extends Phaser.Scene{
     });
 
     // adding the shark;
-    this.shark = this.physics.add.sprite(0, 360, "shark");
+    this.shark = this.physics.add.sprite(-150, 360, "shark");
     this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
+
     
     
    
@@ -613,14 +614,15 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-            if(this.timeLeft <= 60) {
-              this.timeLeft += 1 
-            }
+            // if(this.timeLeft <= 60) {
+            //   this.timeLeft += 1 
+            // }
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
               this.player.anims.play("run2");
               this.trashcollider.active = false;
               this.netcollider.active = false;
+              this.shark.setVelocityX(-100);
           }
       });
 
@@ -659,6 +661,7 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1;
               this.trashbags.killAndHide(trashbag);
               this.trashbags.remove(trashbag);
+              this.shark.setVelocityX(100);
           }
       });
 
@@ -683,11 +686,24 @@ class playGame extends Phaser.Scene{
               this.timeLeft -= 1
               this.nets.killAndHide(net);
               this.nets.remove(net);
+              this.shark.setVelocityX(100);
           }
       });
 
     }, null, this);
-  }
+  
+
+  // collisions for shark and player
+  this.sharkcollider = this.physics.add.overlap(this.player, this.shark, function(player, shark){
+
+    if (gameOptions.SFXmuted === false)  {
+      obstacleHit.play()
+    }
+    this.bgmusic.stop();
+    this.scene.start("EndScreen");
+
+  }, null, this);
+}
 
   // adding rocks
   addRocks(){
@@ -730,6 +746,7 @@ class playGame extends Phaser.Scene{
       this.shark.setVelocityY(-90)
       this.shark.angle = 0
     }
+    
   }
 
   decreaseTimeBar() {
