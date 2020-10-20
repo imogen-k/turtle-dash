@@ -13,7 +13,7 @@ class endScreen extends Phaser.Scene {
         this.add.image(640, 360, 'sea')
         this.add.image(680, 170, 'turtlesad')
         this.add.text(450, 220, 'GAME OVER', { fontFamily: 'bubble_bobbleregular', fontSize: '100px' })
-        this.add.text(450, 320, 'SCORE:' + this.score, { fontFamily: 'bubble_bobbleregular', fontSize: '80px' })
+        this.add.text(450, 320, 'SCORE: ' + this.score, { fontFamily: 'bubble_bobbleregular', fontSize: '80px' })
         this.add.text(450, 420, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
         
         this.name = this.add.rexInputText(770, 492, {
