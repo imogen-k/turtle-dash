@@ -665,9 +665,7 @@ class playGame extends Phaser.Scene{
     if (gameOptions.SFXmuted === false)  {
       obstacleHit.play()
     }
-    this.bgmusic.stop();
-    this.scene.start("EndScreen");
-
+    this.gameOver()
   }, null, this);
 }
 
