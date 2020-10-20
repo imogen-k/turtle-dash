@@ -1,5 +1,5 @@
 class endScreen extends Phaser.Scene {
-
+  
     constructor(){
         super("EndScreen");
     }
@@ -22,7 +22,7 @@ class endScreen extends Phaser.Scene {
             fontFamily: 'bubble_bobbleregular',
         });
         this.name.resize(200, 150);
-        //this.name.on('textchange', (inputText) => {inputText.setStyle(color,'#FFF')});
+        this.name.on('textchange', (inputText) => {inputText.setStyle(color,'#FFFFFF')});
         this.name.on('click', (inputText) => {inputText.setText('')});
 
 
