@@ -14,9 +14,7 @@ class scoreScene extends Phaser.Scene {
         this.leaderboard = JSON.parse(localStorage.getItem('leaderboard'))
         this.sortLeaderboard(this.leaderboard);
         this.displayLeaderboard(this.leaderboard);
-        console.log(localStorage)
         this.resetLocalStorage(this.leaderboard)
-        console.log(localStorage)
 
         var playAgainButton = this.add.image(640, 600, 'playAgain')
         playAgainButton.setInteractive();
