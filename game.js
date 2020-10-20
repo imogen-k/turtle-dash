@@ -317,14 +317,9 @@ class playGame extends Phaser.Scene{
 
     // adding the player;
     this.player = this.physics.add.sprite(320, 360, "player");
-    this.jumpPosition = { y: this.player.y, reached: true };
     this.player.setDepth(2);
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
-
-    this.playerFalling = true
-
-  //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
@@ -658,6 +653,7 @@ class playGame extends Phaser.Scene{
     this.gameOver()
   }, null, this);
 
+  this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   this.input.on('pointerdown', () => { this.turtleJump() });
 
   this.jumpTime = { delay: 500, callback: () => { this.player.setVelocityY(200) } }
