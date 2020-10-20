@@ -27,12 +27,6 @@ let gameOptions = {
     // platform max and min height, as screen height ratio
     platformVerticalLimit: [0.4, 0.8],
 
-    // player gravity
-    playerGravity: 25,
-
-    // shark gravity
-    sharkGravity: 25,
-
     // player jump force
     jumpForce: 400,
 
@@ -323,10 +317,12 @@ class playGame extends Phaser.Scene{
 
     // adding the player;
     this.player = this.physics.add.sprite(320, 360, "player");
-    this.player.setGravityY(200);
+    this.jumpPosition = { y: this.player.y, reached: true };
     this.player.setDepth(2);
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
+
+    this.playerFalling = true
 
   //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
@@ -656,12 +652,15 @@ class playGame extends Phaser.Scene{
 
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
-
     if (gameOptions.SFXmuted === false)  {
       obstacleHit.play()
     }
     this.gameOver()
   }, null, this);
+
+  this.input.on('pointerdown', () => { this.turtleJump() });
+
+  this.jumpTime = { delay: 500, callback: () => { this.player.setVelocityY(200) } }
 }
 
   // adding rocks
@@ -690,17 +689,16 @@ class playGame extends Phaser.Scene{
     return rightmostRock;
   }
 
-  turtleMovement() {
-    console.log(this.player.velocity.y)
-    console.log(this.player.angle)
-    if (this.player.velocityY > 0 && this.player.angle < 50) {
-      this.player.angle += 1
-    }
+  turtleJump() {
+    this.player.setVelocityY(-250)
+    this.player.angle = -10   
+    this.time.addEvent(this.jumpTime);
   }
 
-  moveTurtle() {
-    this.player.setVelocityY(-200)
-    this.player.angle = 0
+  turtleMovement() {
+    if(this.player.angle < 40) {
+      this.player.angle ++
+    }
   }
 
   sharkMovement() {
@@ -734,13 +732,10 @@ class playGame extends Phaser.Scene{
 
   update(){
 
-    this.turtleMovement()
-
-    this.input.on('pointerdown', () => { this.moveTurtle() });
-
-    this.decreaseTimeBar()
-    this.sharkMovement()
-    this.checkForGameOver()
+    this.turtleMovement();
+    this.sharkMovement();
+    this.decreaseTimeBar();
+    this.checkForGameOver();
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
@@ -791,15 +786,5 @@ class playGame extends Phaser.Scene{
       }
     }, this);
 
-    // if (this.framesMoveUp > 0) {
-    //   this.framesMoveUp--
-    // } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
-    //   this.moveTurtle()
-    // } else {
-    //   this.player.setVelocityY(100)
-    //   if (this.player.angle < 50) {
-    //     this.player.angle += 1
-    //   }
-    // }
   }
 }
