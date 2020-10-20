@@ -363,12 +363,17 @@ class playGame extends Phaser.Scene{
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
-    this.bgmusic.play()
+    if (gameOptions.SFXmuted === true) {
+      this.bgmusic.stop()
+    } else {
+    this.bgmusic.play() }
+    
+    
 
     // muting background music
-    this.muteMusic = this.add.text(40, 10, 'Music')
+    this.muteMusic = this.add.text(40, 10, 'Music', { fontFamily: 'bubble_bobbleregular'})
   
-    this.muteSFX = this.add.text(120, 10, 'SFX')
+    this.muteSFX = this.add.text(120, 10, 'SFX', { fontFamily: 'bubble_bobbleregular'})
 
     // adding sound effects
     var starCollected = this.sound.add("collect-star");
@@ -380,7 +385,7 @@ class playGame extends Phaser.Scene{
 
     
     
-    this.scoreDisplay = this.add.text(300, 40, 'Score: ' + gameOptions.lastScore)
+    this.scoreDisplay = this.add.text(300, 40, 'Score: ' + gameOptions.lastScore, { fontFamily: 'bubble_bobbleregular'})
 
 
     this.scoreTimer = this.time.addEvent({
