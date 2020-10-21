@@ -1,7 +1,7 @@
 # Turtle Dash
 
 ## Project overview
-
+Welcome to Turtle Dash, an addictive game created in Phaser.js. 
 
 Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
@@ -33,6 +33,7 @@ Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
 We started out by mind mapping ideas for our project, checkout our [project board](https://miro.com/app/board/o9J_kipU7tY=/) to see our progress throughout our two week project.
 
+![wireframe](./readme-img/wireframe.png)
 
 ## Challenges
 
