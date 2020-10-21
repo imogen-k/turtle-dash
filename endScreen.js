@@ -16,8 +16,8 @@ class endScreen extends Phaser.Scene {
         this.add.text(450, 320, 'SCORE: ' + this.score, { fontFamily: 'bubble_bobbleregular', fontSize: '80px' })
         this.add.text(450, 420, 'Enter your name:', { fontFamily: 'bubble_bobbleregular', fontSize: '30px' })  
         
-        this.name = this.add.rexInputText(770, 492, {
-            type: 'textarea',
+        this.name = this.add.rexInputText(770, 436, {
+            type: 'text',
             text: '<your name>',
             color: '#78758d',
             fontSize: '30px',
