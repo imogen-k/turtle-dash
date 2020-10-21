@@ -379,6 +379,7 @@ class playGame extends Phaser.Scene{
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0);
     this.energyBar.setDepth(3);
+    energyContainer.setDepth(3);
 
 
     this.gameTimer = this.time.addEvent({
@@ -756,7 +757,7 @@ class playGame extends Phaser.Scene{
      this.seahorseCreate = false;
      this.stepcount = 0;
      
-     if (this.score > 100 && this.seahorseCreate == false) {
+     if (this.score > 15500 && this.seahorseCreate == false) {
        this.seahorse.setVisible(true);
        this.seahorse.setVelocityX(-150);
        this.seahorse.setVelocityY(100);
