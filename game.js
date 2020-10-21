@@ -656,7 +656,7 @@ class playGame extends Phaser.Scene{
   this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   this.input.on('pointerdown', () => { this.turtleJump() });
 
-  this.jumpTime = { delay: 500, callback: () => { this.player.setVelocityY(200) } }
+  this.jumpTime = { delay: 500 callback: () => { this.player.setVelocityY(200) } }
 }
 
   // adding rocks
@@ -686,7 +686,7 @@ class playGame extends Phaser.Scene{
   }
 
   turtleJump() {
-    this.player.setVelocityY(-250)
+    this.player.setVelocityY(-300)
     this.player.angle = -10   
     this.time.addEvent(this.jumpTime);
   }
