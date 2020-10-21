@@ -5,6 +5,18 @@
 
 Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
+![loading](./readme-img/loading.png)
+
+![menu](./readme-img/menu.png)
+
+![info](./readme-img/info.png)
+
+![game](./readme-img/game.png)
+
+![end](./readme-img/end.png)
+
+![highscore](./readme-img/highscore.png)
+
 
 ## The team
 [Imogen Kraak](https://github.com/imogen-k)
