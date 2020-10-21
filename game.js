@@ -365,10 +365,14 @@ class playGame extends Phaser.Scene{
       callback: function(){
         this.score += 7
         this.scoreDisplay.setText(`Score: ${this.score}`)
+        // if (this.score >= 100) {
+        //   console.log("Wow, well done!")
+        // }
       },
       callbackScope: this,
       loop: true
     })
+    
 
 
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
@@ -549,7 +553,6 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
-            
           }, null, this);
         }
       },
@@ -706,7 +709,7 @@ class playGame extends Phaser.Scene{
   moveTurtle() {
     this.player.setVelocityY(-380)
     this.player.angle = 0
-    this.framesMoveUp = 15
+    this.framesMoveUp = 10
   }
 
   sharkMovement() {
