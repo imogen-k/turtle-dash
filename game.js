@@ -130,6 +130,7 @@ class preloadGame extends Phaser.Scene{
     this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
     this.load.audio("collect-star", "./assets/zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
     this.load.audio("gameOverSound", "./assets/game-over-sound-effect.mp3")
+    this.load.audio("chompSound", "./assets/chomp.mp3")
 
 
     // coral
@@ -170,6 +171,12 @@ class preloadGame extends Phaser.Scene{
 
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
+
+    // splash
+    this.load.spritesheet("splash", "./assets/splash.png", {
+      frameWidth: 100,
+      frameHeight: 100
+  });
 
     // player is a sprite sheet made
 
@@ -243,6 +250,18 @@ class preloadGame extends Phaser.Scene{
     this.anims.create({
       key: "swim",
       frames: this.anims.generateFrameNumbers("shark", {
+          start: 0,
+          end: 1
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
+
+    // setting splash animation
+    this.anims.create({
+      key: "splash",
+      frames: this.anims.generateFrameNumbers("splash", {
           start: 0,
           end: 1
       }),
@@ -334,6 +353,7 @@ class playGame extends Phaser.Scene{
     this.player.setDepth(2);
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
+
 
   //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
@@ -680,8 +700,21 @@ class playGame extends Phaser.Scene{
 
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
+  //adding splash 
+  this.chomp = this.sound.add('chompSound');
+  this.player.anims.play("splash");
+  this.chomp.play();
+
+  this.time.addEvent({
+    delay: 1200,
+    callback: function(){
+      this.gameOver()
+    },
   
-    this.gameOver()
+  callbackScope: this,
+  loop: false
+  });
+    
   }, null, this);
 
 }
