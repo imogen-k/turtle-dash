@@ -51,7 +51,6 @@ let gameOptions = {
     // % of probability a fire appears on the platform
     firePercent: 25,
 
-
     // sfx muted
     SFXmuted: false,
 
@@ -441,7 +440,8 @@ class playGame extends Phaser.Scene{
 
     this.muteMusic = this.add.text(179, 10, 'Fullscreen', { fontFamily: 'bubble_bobbleregular'});
 
-    this.resetGame = this.add.text(270, 10, 'Reset', { fontFamily: 'bubble_bobbleregular'} )
+    this.add.text(270, 10, 'Reset', { fontFamily: 'bubble_bobbleregular'} )
+    this.resetGame = this.add.image(287, 50, 'resetButton')
     this.resetGame.setInteractive()
     this.resetGame.on('pointerdown', () => { 
       this.bgmusic.stop()
