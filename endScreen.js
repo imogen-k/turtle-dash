@@ -6,7 +6,7 @@ class endScreen extends Phaser.Scene {
 
     init(data) {
         this.score = data.score
-        this.timeLeft = date.time
+        this.timeLeft = data.time
     }
    
     create() {
