@@ -427,7 +427,7 @@ class playGame extends Phaser.Scene{
     }
 
    // player movement
-    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.up);
     this.framesMoveUp = 0;
     this.player.body.allowGravity = false;
 
@@ -876,6 +876,8 @@ class playGame extends Phaser.Scene{
 
 
   update(){
+
+    this.input.on('pointerdown', () => { this.moveTurtle() });
     
    this.decreaseTimeBar()
    this.sharkMovement()
