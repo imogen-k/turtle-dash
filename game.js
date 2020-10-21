@@ -972,6 +972,10 @@ class playGame extends Phaser.Scene{
       this.framesMoveUp--
     } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
       this.moveTurtle()
+      if (this.score > 3000) {
+        this.player.setVelocityY(-280)
+        this.framesMoveUp = 10
+      }
     } else {
       this.player.setVelocityY(100)
       if (this.player.angle < 50) {
