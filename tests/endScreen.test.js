@@ -1,4 +1,4 @@
-const Phaser = require('../dist/phaser.js')
+// const Phaser = require('../dist/phaser.js')
 const endScreen = require('../endScreen.js');
 
 let game;
