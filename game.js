@@ -782,7 +782,7 @@ class playGame extends Phaser.Scene{
   }
 
   destroyUnusedPinkCoral() {
-    thispinkcorals.getChildren().forEach(function(coral){
+    this.pinkcorals.getChildren().forEach(function(coral){
       if (coral.x < 0) { coral.destroy(); }
     })
   }
