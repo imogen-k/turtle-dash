@@ -33,6 +33,9 @@ Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
 We started out by mind mapping ideas for our project, checkout our [project board](https://miro.com/app/board/o9J_kipU7tY=/) to see our progress throughout our two week project. Originally we planned to use React Native, React Native game engine and Matter.js to build our game. However after some difficulties we changed our tech stack to Node.js and Phaser.js.
 
+
+As well as sea objects such as coral, we decided to add in nets and plastic bags as obstacles. We did this to do this to make players aware of the dangers of single use plastics and hope that this would encourage players to cut down on their plastic usage.
+
 ### Wireframe
 ![wireframe](./readme-img/wireframe.png)
 
