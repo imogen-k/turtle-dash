@@ -51,3 +51,4 @@ class endScreen extends Phaser.Scene {
         }
     }
 }
+module.exports = endScreen;

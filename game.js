@@ -1,3 +1,4 @@
+
 let game;
 
 // global game options
@@ -799,3 +800,4 @@ class playGame extends Phaser.Scene{
     }
   }
 }
+module.exports = playGame;

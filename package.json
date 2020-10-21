@@ -72,6 +72,7 @@
     "eslint-plugin-es5": "^1.5.0",
     "fs-extra": "^9.0.1",
     "jasmine": "^3.6.2",
+    "jest": "^26.6.0",
     "jsdoc": "^3.6.6",
     "node-sloc": "^0.1.12",
     "remove-files-webpack-plugin": "^1.4.4",
@@ -90,5 +91,8 @@
     "path": "^0.12.7",
     "surge": "^0.21.6",
     "surge-favicon": "^0.2.1"
-  }
+  },
+    "scripts": {
+      "test": "jest"
+    }
 }
