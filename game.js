@@ -120,9 +120,9 @@ class preloadGame extends Phaser.Scene{
     this.load.plugin('rexinputtextplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexinputtextplugin.min.js', true);
 
     this.load.image('sea', './assets/sea-background.jpg');
-    this.load.image('floorboundary', './assets/floorboundary.png');
     this.load.image("energycontainer", "./assets/energycontainer.png");
     this.load.image("energybar", "./assets/energybar.png");
+    this.load.image("clock", "./assets/clock.png")
 
     this.load.audio("backgroundmusic", ["./assets/bensound-memories.ogg", "./assets/bensound-memories.mp3"])
     this.load.audio("jellymode", ["./assets/zapsplat_cartoon_magic_ascend_spell.ogg", "./assets/zapsplat_cartoon_magic_ascend_spell.mp3"])
@@ -391,12 +391,14 @@ class playGame extends Phaser.Scene{
       loop: true
     })
 
-
-    let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
-    this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
+    
+    this.energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
+    this.energyBar = this.add.image(this.energyContainer.x + 25, this.energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0);
     this.energyBar.setDepth(3);
-    energyContainer.setDepth(3);
+    this.energyContainer.setDepth(3);
+    this.clock = this.add.image(960, 25, "clock").setOrigin(0,0);
+    this.clock.setDepth(3);
 
 
     this.gameTimer = this.time.addEvent({
@@ -777,6 +779,10 @@ class playGame extends Phaser.Scene{
   decreaseTimeBar() {
     let percentageOfTimeLeft = this.timeLeft/gameOptions.initialTime  
     this.energyBar.setScale(percentageOfTimeLeft, 1)
+    if(percentageOfTimeLeft < 0.1 ) {
+      this.energyContainer.setTint(0xff0000)
+      this.energyBar.setTint(0xff7070)
+    }
   }
 
   checkForGameOver() {
