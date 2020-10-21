@@ -5,13 +5,13 @@ Welcome to Turtle Dash, an addictive game created in Phaser.js.
 
 Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
+![gamplay](./readme-img/turtle-dash-gameplay.gif)
+
 ![loading](./readme-img/loading.png)
 
 ![menu](./readme-img/menu.png)
 
 ![info](./readme-img/info.png)
-
-![game](./readme-img/game.png)
 
 ![end](./readme-img/end.png)
 
@@ -68,7 +68,7 @@ We attempted to test using Jest, but due to some quirks with Phaser.js we did no
 ## Installation and setup
 
 * Clone this repository locally with `git clone https://github.com/imogen-k/turtle-dash.git`
-* Change into the project folder with  `cd turtle-wiggle`
+* Change into the project folder with  `cd turtle-dash`
 * Install all dependencies with `npm install`
 * To run locally install a local server such a Live server on VS code
 * Right click on the `index.html` file and select `Open with live server' to run
