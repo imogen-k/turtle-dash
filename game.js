@@ -338,8 +338,6 @@ class playGame extends Phaser.Scene{
 
     this.floor = this.physics.add.staticGroup();
     this.floor.create(360, 720,'floorboundary')
-    
-    this.coral = this.physics.add.staticGroup();
 
     // group with all active rocks.
     this.rocksGroup = this.add.group();
@@ -442,6 +440,13 @@ class playGame extends Phaser.Scene{
     }, this);
 
     this.muteMusic = this.add.text(179, 10, 'Fullscreen', { fontFamily: 'bubble_bobbleregular'});
+
+    this.resetGame = this.add.text(270, 10, 'Reset', { fontFamily: 'bubble_bobbleregular'} )
+    this.resetGame.setInteractive()
+    this.resetGame.on('pointerdown', () => { 
+      this.bgmusic.stop()
+      this.scene.start("PlayGame")
+    });
 
     // create star group
     this.stars = this.physics.add.group()
@@ -698,6 +703,7 @@ class playGame extends Phaser.Scene{
 
     this.gameOverSound = this.sound.add('gameOverSound');
 
+
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
   //adding splash 
@@ -760,7 +766,6 @@ class playGame extends Phaser.Scene{
       this.shark.setVelocityY(-90)
       this.shark.angle = 0
     }
-    
   }
 
   decreaseTimeBar() {
@@ -784,6 +789,7 @@ class playGame extends Phaser.Scene{
       this.scene.start("EndScreen", {score: this.score});
     }
   }
+
 
   // Easter egg
   makeSeahorse(){
@@ -825,12 +831,64 @@ class playGame extends Phaser.Scene{
      }
   }
 
+  destroyUnusedStars() {
+    this.stars.getChildren().forEach(function(star){
+      if (star.x < 0) { star.destroy(); }
+    })
+  }
+
+  destroyUnusedJellyfish() {
+    this.jellyfishes.getChildren().forEach(function(jellyfish){
+      if (jellyfish.x < 0) { jellyfish.destroy(); }
+    })
+  }
+
+  destroyUnusedNets() {
+    this.nets.getChildren().forEach(function(net){
+      if (net.x < 0) { net.destroy(); }
+    })
+  }
+
+  destroyUnusedTrashbags() {
+    this.trashbags.getChildren().forEach(function(trashbag){
+      if (trashbag.x < 0) { trashbag.destroy(); }
+    })
+  }
+
+  destroyUnusedYellowCoral() {
+    this.yellowcorals.getChildren().forEach(function(coral){
+      if (coral.x < 0) { coral.destroy(); }
+    })
+  }
+
+  destroyUnusedGreenCoral() {
+    this.greencorals.getChildren().forEach(function(coral){
+      if (coral.x < 0) { coral.destroy(); }
+    })
+  }
+
+  destroyUnusedPinkCoral() {
+    this.pinkcorals.getChildren().forEach(function(coral){
+      if (coral.x < 0) { coral.destroy(); }
+    })
+  }
+
+
+
   update(){
     
    this.decreaseTimeBar()
    this.sharkMovement()
    this.checkForGameOver()
    this.makeSeahorse()
+
+   this.destroyUnusedStars()
+   this.destroyUnusedJellyfish()
+   this.destroyUnusedNets()
+   this.destroyUnusedTrashbags()
+   this.destroyUnusedYellowCoral()
+   this.destroyUnusedGreenCoral()
+   this.destroyUnusedPinkCoral()
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
