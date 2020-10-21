@@ -617,6 +617,9 @@ class playGame extends Phaser.Scene{
      this.physics.add.collider(this.player, this.jellyfishes, function(player, jellyfish){
       if (gameOptions.SFXmuted === false) {
         jellymodesound.play()
+        this.player.anims.play("run2");
+        this.trashcollider.active = false;
+        this.netcollider.active = false;
       }
       this.tweens.add({
           targets: jellyfish,
@@ -628,9 +631,6 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
-              this.player.anims.play("run2");
-              this.trashcollider.active = false;
-              this.netcollider.active = false;
               this.shark.x -= 50;
           }
       });
