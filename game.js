@@ -356,7 +356,7 @@ class playGame extends Phaser.Scene{
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
-    if (gameOptions.SFXmuted === true) {
+    if (gameOptions.musicMuted === true) {
       this.bgmusic.stop()
     } else {
     this.bgmusic.play() }
