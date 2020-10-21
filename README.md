@@ -31,6 +31,16 @@ Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
 ## Project process
 
+*  What is your project?
+
+Ocean themed side scrolling sliding game, with physics.
+
+* Who are your users? What features are important for them?
+
+Casual mobile gamers. Simple controls, easy to understand end goal, highly re-playable (achieved by score improvement), clear instructions.
+
+
+
 We started out by mind mapping ideas for our project, checkout our [project board](https://miro.com/app/board/o9J_kipU7tY=/) to see our progress throughout our two week project. Originally we planned to use React Native, React Native game engine and Matter.js to build our game. However after some difficulties we changed our tech stack to Node.js and Phaser.js.
 
 
