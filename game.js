@@ -364,11 +364,14 @@ class playGame extends Phaser.Scene{
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0)
 
+    this.jumpDuration = 1
+
 
     this.gameTimer = this.time.addEvent({
-        delay: 1000,
+        delay: 100,
         callback: function(){
-            this.timeLeft --;
+            this.timeLeft -= 0.1;
+            this.jumpDuration -= 0.1;
         },
         callbackScope: this,
         loop: true
@@ -655,14 +658,12 @@ class playGame extends Phaser.Scene{
 
   this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   this.input.on('pointerdown', () => { this.turtleJump() });
-
-  this.jumpTime = { delay: 500 callback: () => { this.player.setVelocityY(200) } }
 }
 
   // adding rocks
   addRocks(){
     let rightmostRock = this.getRightmostRock();
-    if(rightmostRock < game.config.width * 2){
+    if(rightmostRock < game.config.width * 2) {
         let rock = this.physics.add.sprite(rightmostRock + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "rocks");
         rock.setOrigin(0.5, 0.85);
         rock.body.setVelocityX(gameOptions.rockSpeed * -1)
@@ -673,8 +674,7 @@ class playGame extends Phaser.Scene{
         rock.setFrame(Phaser.Math.Between(0, 3))
         this.addRocks()
     }
-
-}
+  }
 
   // getting rightmost rock x position
   getRightmostRock(){
@@ -686,24 +686,25 @@ class playGame extends Phaser.Scene{
   }
 
   turtleJump() {
-    this.player.setVelocityY(-300)
-    this.player.angle = -10   
-    this.time.addEvent(this.jumpTime);
+    this.jumpDuration = 0.8
+    //this.jumpDuration <= 0 || this.jumpDuration > 2 ? this.jumpDuration = 1 : this.jumpDuration += 1
+    this.player.setVelocityY(-200)
+    this.player.angle = 10   
   }
 
   turtleMovement() {
-    if(this.player.angle < 40) {
-      this.player.angle ++
-    }
+    if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
+    if(this.player.angle < 40) { this.player.angle ++ }
+    if(this.jumpDuration <= 0) { this.player.setVelocityY(150) }
   }
 
   sharkMovement() {
     this.shark.setVelocityX(5)
     if(this.shark.y < this.player.y) {
-      this.shark.setVelocityY(90)
+      this.shark.setVelocityY(135)
       this.shark.angle = 30
     } else {
-      this.shark.setVelocityY(-90)
+      this.shark.setVelocityY(-180)
       this.shark.angle = 0
     }
     
@@ -727,6 +728,8 @@ class playGame extends Phaser.Scene{
 
 
   update(){
+
+    console.log(this.jumpDuration)
 
     this.turtleMovement();
     this.sharkMovement();
