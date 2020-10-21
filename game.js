@@ -445,6 +445,7 @@ class playGame extends Phaser.Scene{
     this.add.text(270, 10, 'Reset', { fontFamily: 'bubble_bobbleregular'} )
     this.resetGame = this.add.image(287, 50, 'resetButton')
     this.resetGame.setInteractive()
+    this.resetGame.setDepth(3)
     this.resetGame.on('pointerdown', () => { 
       this.bgmusic.stop()
       this.scene.start("PlayGame")
@@ -985,7 +986,7 @@ class playGame extends Phaser.Scene{
     } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
       this.moveTurtle()
     } else {
-      this.player.setVelocityY(100)
+      this.player.setVelocityY(150)
       if (this.player.angle < 50) {
         this.player.angle += 1
       }
