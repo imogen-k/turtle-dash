@@ -130,6 +130,7 @@ class preloadGame extends Phaser.Scene{
     this.load.audio("obstaclehit", ["./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.ogg", "./assets/zapsplat_sound_design_impact_hit_sub_drop_punchy_001_54851.mp3"])
     this.load.audio("collect-star", "./assets/zapsplat_multimedia_alert_bell_ping_wooden_008_54058.mp3")
     this.load.audio("gameOverSound", "./assets/game-over-sound-effect.mp3")
+    this.load.audio("chompSound", "./assets/chomp.mp3")
 
 
     // coral
@@ -157,6 +158,7 @@ class preloadGame extends Phaser.Scene{
     this.load.image('backToMenu', './assets/back-to-menu-btn.png');
     this.load.image('fullscreenMode', './assets/fullscreen-btn.png');
     this.load.image('fullscreenModeOff', './assets/fullscreen-off-btn.png');
+    this.load.image('resetButton', './assets/reset-btn.png');
 
     // how to play screen
     this.load.image('howtoplay', './assets/how-to-play.png');
@@ -164,8 +166,17 @@ class preloadGame extends Phaser.Scene{
     // sad turtle
     this.load.image('turtlesad', './assets/turtle-sad.png');
 
+    //seahorse
+    this.load.image('seahorse', './assets/seahorse.png');
+
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
+
+    // splash
+    this.load.spritesheet("splash", "./assets/splash.png", {
+      frameWidth: 100,
+      frameHeight: 100
+  });
 
     // player is a sprite sheet made
 
@@ -239,6 +250,18 @@ class preloadGame extends Phaser.Scene{
     this.anims.create({
       key: "swim",
       frames: this.anims.generateFrameNumbers("shark", {
+          start: 0,
+          end: 1
+      }),
+      frameRate: 8,
+      yoyo: true,
+      repeat: -1
+    });
+
+    // setting splash animation
+    this.anims.create({
+      key: "splash",
+      frames: this.anims.generateFrameNumbers("splash", {
           start: 0,
           end: 1
       }),
@@ -329,6 +352,7 @@ class playGame extends Phaser.Scene{
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
 
+
   //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
@@ -362,6 +386,7 @@ class playGame extends Phaser.Scene{
       callback: function(){
         this.score += 7
         this.scoreDisplay.setText(`Score: ${this.score}`)
+       
       },
       callbackScope: this,
       loop: true
@@ -372,6 +397,7 @@ class playGame extends Phaser.Scene{
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0);
     this.energyBar.setDepth(3);
+    energyContainer.setDepth(3);
 
 
     this.gameTimer = this.time.addEvent({
@@ -388,6 +414,10 @@ class playGame extends Phaser.Scene{
     this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
+
+    // create seahorse
+    this.seahorse = this.physics.add.image(1200, 260, "seahorse")
+    this.seahorse.setVisible(false);
    
     // the player is not dying
     this.dying = false;
@@ -553,7 +583,6 @@ class playGame extends Phaser.Scene{
           this.physics.add.collider(this.player, pinkcoral, (player, coral) => {
             coral.body.velocity.x = -100;
             coral.body.velocity.y = 0;
-            
           }, null, this);
         }
       },
@@ -674,10 +703,26 @@ class playGame extends Phaser.Scene{
 
     this.gameOverSound = this.sound.add('gameOverSound');
 
-    // collisions for shark and player
-    this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
+
+  // collisions for shark and player
+  this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
+  //adding splash 
+  this.chomp = this.sound.add('chompSound');
+  this.player.anims.play("splash");
+  this.chomp.play();
+
+  this.time.addEvent({
+    delay: 1200,
+    callback: function(){
       this.gameOver()
-    }, null, this);
+    },
+  
+  callbackScope: this,
+  loop: false
+  });
+    
+  }, null, this);
+
 }
 
   // adding rocks
@@ -709,7 +754,7 @@ class playGame extends Phaser.Scene{
   moveTurtle() {
     this.player.setVelocityY(-380)
     this.player.angle = 0
-    this.framesMoveUp = 15
+    this.framesMoveUp = 10
   }
 
   sharkMovement() {
@@ -743,6 +788,47 @@ class playGame extends Phaser.Scene{
       this.bgmusic.stop();
       this.scene.start("EndScreen", {score: this.score});
     }
+  }
+
+
+  // Easter egg
+  makeSeahorse(){
+     this.seahorseCreate = false;
+     this.stepcount = 0;
+     
+     if (this.score > 15500 && this.seahorseCreate == false) {
+       this.seahorse.setVisible(true);
+       this.seahorse.setVelocityX(-150);
+       this.seahorse.setVelocityY(100);
+       this.stepcount += 10
+       if(this.stepcount >= 10) {
+        this.seahorse.setVelocityY(-20);
+        this.stepcount -= 10
+       }
+       this.time.addEvent({
+        delay: 5000,
+        callback: function(){
+          this.seahorse.setVelocityY(20);
+          this.stepcount += 10
+        },
+      
+      callbackScope: this,
+      loop: true
+      });
+
+      this.time.addEvent({
+        delay: 4000,
+        callback: function(){
+          this.seahorse.setVelocityY(20);
+          this.stepcount -= 10
+        },
+      
+      callbackScope: this,
+      loop: true
+      });
+
+       this.seahorseCreate = true;
+     }
   }
 
   destroyUnusedStars() {
@@ -788,11 +874,13 @@ class playGame extends Phaser.Scene{
   }
 
 
+
   update(){
     
    this.decreaseTimeBar()
    this.sharkMovement()
    this.checkForGameOver()
+   this.makeSeahorse()
 
    this.destroyUnusedStars()
    this.destroyUnusedJellyfish()
@@ -841,19 +929,29 @@ class playGame extends Phaser.Scene{
         });
     }
 
+    this.fullscreen = false;
 
+    if(this.fullscreen === false) {
     this.fullscreenOn = this.add.image(210, 50, 'fullscreenMode')
     this.fullscreenOn.setInteractive();
     this.fullscreenOn.setDepth(3);
     this.fullscreenOn.on('pointerdown', () => {
-      if(!this.scale.isFullscreen){
         this.scale.startFullscreen();
-      }
-      else if(this.scale.isFullscreen){
-          this.scale.stopFullscreen();
-      }
-    })
+        this.fullscreen = true;
+      })
+    }
 
+    if(this.scale.isFullscreen) {
+      this.fullscreenOff = this.add.image(210, 50, 'fullscreenModeOff')
+      this.fullscreenOff.setInteractive();
+      this.fullscreenOff.setDepth(3);
+      this.fullscreenOff.on('pointerdown', () => {
+
+          this.scale.stopFullscreen();
+          this.fullscreen = false;
+        }
+        )
+      }
 
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
