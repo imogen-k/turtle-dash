@@ -165,6 +165,9 @@ class preloadGame extends Phaser.Scene{
     // sad turtle
     this.load.image('turtlesad', './assets/turtle-sad.png');
 
+    //seahorse
+    this.load.image('seahorse', './assets/seahorse.png');
+
     // game logo
     this.load.image('logo', './assets/turtle-dash-logo.png');
 
@@ -365,14 +368,11 @@ class playGame extends Phaser.Scene{
       callback: function(){
         this.score += 7
         this.scoreDisplay.setText(`Score: ${this.score}`)
-        // if (this.score >= 100) {
-        //   console.log("Wow, well done!")
-        // }
+       
       },
       callbackScope: this,
       loop: true
     })
-    
 
 
     let energyContainer = this.add.image(1000, 20, "energycontainer").setOrigin(0,0);
@@ -395,6 +395,10 @@ class playGame extends Phaser.Scene{
     this.shark.setScale(1.5,1.5);
     this.shark.setDepth(2);
     this.shark.setCollideWorldBounds(true);
+
+    // create seahorse
+    this.seahorse = this.physics.add.image(1200, 260, "seahorse")
+    this.seahorse.setVisible(false);
    
     // the player is not dying
     this.dying = false;
@@ -678,6 +682,7 @@ class playGame extends Phaser.Scene{
   
     this.gameOver()
   }, null, this);
+
 }
 
   // adding rocks
@@ -746,12 +751,52 @@ class playGame extends Phaser.Scene{
     }
   }
 
+  // Easter egg
+  makeSeahorse(){
+     this.seahorseCreate = false;
+     this.stepcount = 0;
+     
+     if (this.score > 100 && this.seahorseCreate == false) {
+       this.seahorse.setVisible(true);
+       this.seahorse.setVelocityX(-150);
+       this.seahorse.setVelocityY(100);
+       this.stepcount += 10
+       if(this.stepcount >= 10) {
+        this.seahorse.setVelocityY(-20);
+        this.stepcount -= 10
+       }
+       this.time.addEvent({
+        delay: 5000,
+        callback: function(){
+          this.seahorse.setVelocityY(20);
+          this.stepcount += 10
+        },
+      
+      callbackScope: this,
+      loop: true
+      });
+
+      this.time.addEvent({
+        delay: 4000,
+        callback: function(){
+          this.seahorse.setVelocityY(20);
+          this.stepcount -= 10
+        },
+      
+      callbackScope: this,
+      loop: true
+      });
+
+       this.seahorseCreate = true;
+     }
+  }
 
   update(){
     
    this.decreaseTimeBar()
    this.sharkMovement()
    this.checkForGameOver()
+   this.makeSeahorse()
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
@@ -815,7 +860,6 @@ class playGame extends Phaser.Scene{
         }
         )
       }
-
 
     // recycling rocks
     this.rocksGroup.getChildren().forEach(function(rock){
