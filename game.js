@@ -687,7 +687,6 @@ class playGame extends Phaser.Scene{
 
   turtleJump() {
     this.jumpDuration = 0.8
-    //this.jumpDuration <= 0 || this.jumpDuration > 2 ? this.jumpDuration = 1 : this.jumpDuration += 1
     this.player.setVelocityY(-200)
     this.player.angle = 10   
   }
@@ -728,8 +727,6 @@ class playGame extends Phaser.Scene{
 
 
   update(){
-
-    console.log(this.jumpDuration)
 
     this.turtleMovement();
     this.sharkMovement();
