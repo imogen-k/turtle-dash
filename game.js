@@ -795,10 +795,10 @@ class playGame extends Phaser.Scene{
     if(gameOptions.SFXmuted === false) {
        this.gameOverSound.play()
        this.bgmusic.stop();
-       this.scene.start("EndScreen", {score: this.score});
+       this.scene.start("EndScreen", {score: this.score, time: this.timeLeft});
       } else {
       this.bgmusic.stop();
-      this.scene.start("EndScreen", {score: this.score});
+      this.scene.start("EndScreen", {score: this.score, time: this.timeLeft});
     }
   }
 
