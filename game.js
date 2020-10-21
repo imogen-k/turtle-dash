@@ -596,6 +596,11 @@ class playGame extends Phaser.Scene{
       if (gameOptions.SFXmuted === false) {
         starCollected.play()
       }
+
+      if(this.timeLeft <= 60) {
+        this.timeLeft += 1 
+      }
+
       this.tweens.add({
           targets: star,
           y: star.y - 100,
@@ -606,9 +611,6 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.stars.killAndHide(star);
               this.stars.remove(star);
-              if(this.timeLeft <= 60) {
-                this.timeLeft += 1 
-              }
           }
         });
        }, null, this);
@@ -622,6 +624,7 @@ class playGame extends Phaser.Scene{
       this.player.anims.play("run2");
       this.trashcollider.active = false;
       this.netcollider.active = false;
+      this.shark.x -= 50;
 
       this.tweens.add({
           targets: jellyfish,
@@ -633,7 +636,6 @@ class playGame extends Phaser.Scene{
           onComplete: function(){
               this.jellyfishes.killAndHide(jellyfish);
               this.jellyfishes.remove(jellyfish);
-              this.shark.x -= 50;
           }
       });
 
@@ -661,6 +663,9 @@ class playGame extends Phaser.Scene{
         obstacleHit.play()
       }
 
+      this.shark.x += 10;
+      this.timeLeft -= 1;
+
       this.tweens.add({
           targets: trashbag,
           y: trashbag.y - 100,
@@ -669,10 +674,8 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              this.timeLeft -= 1;
               this.trashbags.killAndHide(trashbag);
               this.trashbags.remove(trashbag);
-              this.shark.x += 10;
           }
       });
 
@@ -686,6 +689,9 @@ class playGame extends Phaser.Scene{
         obstacleHit.play()
       }
 
+      this.timeLeft -= 1
+      this.shark.x += 10;
+
       this.tweens.add({
           targets: net,
           y: net.y - 100,
@@ -694,10 +700,8 @@ class playGame extends Phaser.Scene{
           ease: "Cubic.easeOut",
           callbackScope: this,
           onComplete: function(){
-              this.timeLeft -= 1
               this.nets.killAndHide(net);
               this.nets.remove(net);
-              this.shark.x += 10;
           }
       });
 
