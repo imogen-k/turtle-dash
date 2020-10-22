@@ -27,23 +27,11 @@ let gameOptions = {
     // platform max and min height, as screen height ratio
     platformVerticalLimit: [0.4, 0.8],
 
-    // player jump force
-    jumpForce: 400,
-
     // player starting X position
     playerStartPosition: 425,
 
     // shark starting X position
     sharkStartPosition: 0,
-
-    // consecutive jumps allowed
-    jumps: 2,
-
-    // % of probability a coin appears on the platform
-    starPercent: 25,
-
-    // % of probability a fire appears on the platform
-    firePercent: 25,
 
 
     // sfx muted
@@ -364,7 +352,7 @@ class playGame extends Phaser.Scene{
     this.energyBar = this.add.image(energyContainer.x + 25, energyContainer.y + 21, "energybar");
     this.energyBar.setOrigin(0,0)
 
-    this.jumpDuration = 1
+    this.jumpDuration = 0
 
 
     this.gameTimer = this.time.addEvent({
