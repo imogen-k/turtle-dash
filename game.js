@@ -31,7 +31,7 @@ let gameOptions = {
     playerStartPosition: 425,
 
     // shark starting X position
-    sharkStartPosition: 0
+    sharkStartPosition: 0,
 
     // sfx muted
     SFXmuted: false,
