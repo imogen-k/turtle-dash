@@ -27,29 +27,11 @@ let gameOptions = {
     // platform max and min height, as screen height ratio
     platformVerticalLimit: [0.4, 0.8],
 
-    // player gravity
-    playerGravity: 25,
-
-    // shark gravity
-    sharkGravity: 25,
-
-    // player jump force
-    jumpForce: 400,
-
     // player starting X position
     playerStartPosition: 425,
 
     // shark starting X position
-    sharkStartPosition: 0,
-
-    // consecutive jumps allowed
-    jumps: 2,
-
-    // % of probability a coin appears on the platform
-    starPercent: 25,
-
-    // % of probability a fire appears on the platform
-    firePercent: 25,
+    sharkStartPosition: 0
 
     // sfx muted
     SFXmuted: false,
@@ -346,13 +328,9 @@ class playGame extends Phaser.Scene{
 
     // adding the player;
     this.player = this.physics.add.sprite(320, 360, "player");
-    this.player.setGravityY(gameOptions.playerGravity);
     this.player.setDepth(2);
     this.player.setCollideWorldBounds(true);
     this.player.body.setImmovable(true);
-
-
-  //  this.physics.add.overlap(this.player,this.floor,this.scene.start("EndScreen"),null,this)
 
     // playing the background music
     this.bgmusic = this.sound.add('backgroundmusic');
@@ -400,11 +378,14 @@ class playGame extends Phaser.Scene{
     this.clock = this.add.image(960, 25, "clock").setOrigin(0,0);
     this.clock.setDepth(3);
 
+    this.jumpDuration = 0
+
 
     this.gameTimer = this.time.addEvent({
-        delay: 1000,
+        delay: 100,
         callback: function(){
-            this.timeLeft --;
+            this.timeLeft -= 0.1;
+            this.jumpDuration -= 0.1;
         },
         callbackScope: this,
         loop: true
@@ -428,11 +409,6 @@ class playGame extends Phaser.Scene{
       this.shark.anims.play("swim");
     }
 
-   // player movement
-    this.upButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.up);
-    this.framesMoveUp = 0;
-    this.player.body.allowGravity = false;
-
     //fullscreen mode
     this.input.keyboard.on("keydown_F", function(){
       if(!this.scale.isFullscreen){
@@ -450,6 +426,7 @@ class playGame extends Phaser.Scene{
       this.bgmusic.stop()
       this.scene.start("PlayGame")
     });
+
 
     // create star group
     this.stars = this.physics.add.group()
@@ -715,29 +692,29 @@ class playGame extends Phaser.Scene{
 
   // collisions for shark and player
   this.sharkcollider = this.physics.add.collider(this.player, this.shark, function(player, shark){
-  //adding splash 
-  this.chomp = this.sound.add('chompSound');
-  this.player.anims.play("splash");
-  this.chomp.play();
-
-  this.time.addEvent({
-    delay: 1200,
-    callback: function(){
+    if (gameOptions.SFXmuted === false)  {
+      this.chomp = this.sound.add('chompSound');
+      this.chomp.play();
+    }
+    this.player.anims.play("splash");
+    this.time.addEvent({
+      delay: 1200,
+      callback: function(){
       this.gameOver()
-    },
-  
-  callbackScope: this,
-  loop: false
-  });
-    
+      },
+      callbackScope: this,
+      loop: false
+    }); 
   }, null, this);
 
+  this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+  this.input.on('pointerdown', () => { this.turtleJump() });
 }
 
   // adding rocks
   addRocks(){
     let rightmostRock = this.getRightmostRock();
-    if(rightmostRock < game.config.width * 2){
+    if(rightmostRock < game.config.width * 2) {
         let rock = this.physics.add.sprite(rightmostRock + Phaser.Math.Between(100, 350), game.config.height + Phaser.Math.Between(0, 100), "rocks");
         rock.setOrigin(0.5, 0.85);
         rock.body.setVelocityX(gameOptions.rockSpeed * -1)
@@ -748,8 +725,7 @@ class playGame extends Phaser.Scene{
         rock.setFrame(Phaser.Math.Between(0, 3))
         this.addRocks()
     }
-
-}
+  }
 
   // getting rightmost rock x position
   getRightmostRock(){
@@ -760,19 +736,26 @@ class playGame extends Phaser.Scene{
     return rightmostRock;
   }
 
-  moveTurtle() {
-    this.player.setVelocityY(-380)
-    this.player.angle = 0
-    this.framesMoveUp = 10
+
+  turtleJump() {
+    this.jumpDuration = 0.8
+    this.player.setVelocityY(-200)
+    this.player.angle = 10   
+  }
+
+  turtleMovement() {
+    if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
+    if(this.player.angle < 40) { this.player.angle ++ }
+    if(this.jumpDuration <= 0) { this.player.setVelocityY(150) }
   }
 
   sharkMovement() {
     this.shark.setVelocityX(5)
     if(this.shark.y < this.player.y) {
-      this.shark.setVelocityY(90)
+      this.shark.setVelocityY(135)
       this.shark.angle = 30
     } else {
-      this.shark.setVelocityY(-90)
+      this.shark.setVelocityY(-180)
       this.shark.angle = 0
     }
   }
@@ -890,8 +873,8 @@ class playGame extends Phaser.Scene{
 
   update(){
 
-    this.input.on('pointerdown', () => { this.moveTurtle() });
-    
+
+   this.turtleMovement();
    this.decreaseTimeBar()
    this.sharkMovement()
    this.checkForGameOver()
@@ -904,6 +887,7 @@ class playGame extends Phaser.Scene{
    this.destroyUnusedYellowCoral()
    this.destroyUnusedGreenCoral()
    this.destroyUnusedPinkCoral()
+
 
     if (gameOptions.SFXmuted === false) {
       this.SFX = this.add.image(135, 50, 'soundOn')
@@ -980,16 +964,5 @@ class playGame extends Phaser.Scene{
         }
       }
     }, this);
-
-    if (this.framesMoveUp > 0) {
-      this.framesMoveUp--
-    } else if (Phaser.Input.Keyboard.JustDown(this.upButton)) {
-      this.moveTurtle()
-    } else {
-      this.player.setVelocityY(150)
-      if (this.player.angle < 50) {
-        this.player.angle += 1
-      }
-    }
   }
 }
