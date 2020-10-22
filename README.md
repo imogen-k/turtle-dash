@@ -5,13 +5,13 @@ Welcome to Turtle Dash, an addictive game created in Phaser.js.
 
 Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
+![gamplay](./readme-img/turtle-dash-gameplay.gif)
+
 ![loading](./readme-img/loading.png)
 
 ![menu](./readme-img/menu.png)
 
 ![info](./readme-img/info.png)
-
-![game](./readme-img/game.png)
 
 ![end](./readme-img/end.png)
 
@@ -31,11 +31,15 @@ Try out our app here: [Turtle Dash](http://turtle-dash.surge.sh/)
 
 ## Project process
 
-*  What is your project?
+###  What is your project?
 
 Ocean themed side scrolling sliding game, with physics.
 
-* Who are your users? What features are important for them?
+### Project goal
+
+To create an addictive game that could be played in browser and also on mobile.
+
+### Who are your users? What features are important for them?
 
 Casual mobile gamers. Simple controls, easy to understand end goal, highly re-playable (achieved by score improvement), clear instructions.
 
@@ -45,6 +49,11 @@ We started out by mind mapping ideas for our project, checkout our [project boar
 
 
 As well as sea objects such as coral, we decided to add in nets and plastic bags as obstacles. We did this to do this to make players aware of the dangers of single use plastics and hope that this would encourage players to cut down on their plastic usage.
+
+### Wiki
+[Turtle Dash Wiki](https://github.com/imogen-k/turtle-dash/wiki)
+
+Includes our user stories.
 
 ### Wireframe
 ![wireframe](./readme-img/wireframe.png)
@@ -68,7 +77,7 @@ We attempted to test using Jest, but due to some quirks with Phaser.js we did no
 ## Installation and setup
 
 * Clone this repository locally with `git clone https://github.com/imogen-k/turtle-dash.git`
-* Change into the project folder with  `cd turtle-wiggle`
+* Change into the project folder with  `cd turtle-dash`
 * Install all dependencies with `npm install`
 * To run locally install a local server such a Live server on VS code
 * Right click on the `index.html` file and select `Open with live server' to run
