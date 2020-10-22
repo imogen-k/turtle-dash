@@ -337,7 +337,9 @@ class playGame extends Phaser.Scene{
     if (gameOptions.musicMuted === true) {
       this.bgmusic.stop()
     } else {
-    this.bgmusic.play() }
+      this.bgmusic.play(); 
+      this.bgmusic.loop = true;
+    }
 
     // muting background music
     this.muteMusic = this.add.text(46, 10, 'Music', { fontFamily: 'bubble_bobbleregular'});
@@ -746,7 +748,7 @@ class playGame extends Phaser.Scene{
   turtleMovement() {
     if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
     if(this.player.angle < 40) { this.player.angle ++ }
-    if(this.jumpDuration <= 0) { this.player.setVelocityY(150) }
+    if(this.jumpDuration <= 0) { this.player.setVelocityY(200) }
   }
 
   sharkMovement() {
@@ -766,6 +768,9 @@ class playGame extends Phaser.Scene{
     if(percentageOfTimeLeft < 0.1 ) {
       this.energyContainer.setTint(0xff0000)
       this.energyBar.setTint(0xff7070)
+    } else {
+      this.energyContainer.clearTint()
+      this.energyBar.clearTint()
     }
   }
 
