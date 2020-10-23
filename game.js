@@ -746,8 +746,8 @@ class playGame extends Phaser.Scene{
   }
 
   turtleMovement() {
-    if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
-    if(this.player.angle < 40) { this.player.angle ++ }
+    //if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
+    this.player.angle +=5
     if(this.jumpDuration <= 0) { this.player.setVelocityY(200) }
   }
 
