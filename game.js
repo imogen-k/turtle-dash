@@ -315,10 +315,6 @@ class playGame extends Phaser.Scene{
 
     //  A simple background for our game
     this.add.image(640, 360, 'sea')
-    //this.worldcollider = this.physics.add.image(5, 360, 'worldcollider')
-
-    this.floor = this.physics.add.staticGroup();
-    this.floor.create(360, 720,'floorboundary')
 
     // group with all active rocks.
     this.rocksGroup = this.add.group();
@@ -746,8 +742,8 @@ class playGame extends Phaser.Scene{
   }
 
   turtleMovement() {
-    //if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
-    this.player.angle +=5
+    if(0.5 > this.jumpDuration <= 0.8) { this.player.angle -= 2 }
+    if(this.player.angle < 40) { this.player.angle ++ }
     if(this.jumpDuration <= 0) { this.player.setVelocityY(200) }
   }
 
